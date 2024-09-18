@@ -1,7 +1,7 @@
 // /* eslint-disable no-console */
 // import { useEffect, useState } from 'react';
 
-// import { ListingsPageFilter } from './ListingsPageFilter';
+// import { ListingsPageFilter } from '@/services/filter';
 
 // interface Region {
 //   id: number;

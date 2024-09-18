@@ -1,11 +1,10 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { type TFilter } from '@/schemas';
+import { type TFilter } from '@/services/filter';
+import { type TRootState } from '@/store';
 
-import { type TRootState } from '../store';
-
-type TListingProps = {
-  listing: {
+type TFilterProps = {
+  filter: {
     region: TFilter['region'][];
     price: TFilter['price'];
     area: TFilter['area'];
@@ -13,8 +12,8 @@ type TListingProps = {
   };
 };
 
-const initialState: TListingProps = {
-  listing: {
+const initialState: TFilterProps = {
+  filter: {
     region: [],
     price: {
       min: 0,
@@ -34,17 +33,17 @@ const filterSlice = createSlice({
   name: 'filter',
   initialState,
   reducers: {
-    setFilter(state, action: PayloadAction<TListingProps>) {
-      state.listing = {
-        ...action.payload.listing,
+    setFilter(state, action: PayloadAction<TFilterProps>) {
+      state.filter = {
+        ...action.payload.filter,
       };
     },
   },
 });
 
 const { setFilter } = filterSlice.actions;
-const selectListing = (state: TRootState): TListingProps['listing'] =>
-  state.filter.listing;
+const selectFilter = (state: TRootState): TFilterProps['filter'] =>
+  state.filter.filter;
 const filterReducer = filterSlice.reducer;
 
-export { filterReducer, selectListing, setFilter };
+export { filterReducer, selectFilter, setFilter };
