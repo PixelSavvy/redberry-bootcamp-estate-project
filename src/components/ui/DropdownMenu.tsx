@@ -5,6 +5,8 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
+import { CheckedIcon } from './Icons';
+
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
@@ -91,41 +93,43 @@ const DropdownMenuItem = React.forwardRef<
 ));
 DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
 
+type TDropdownMenuCheckboxItemProps = {
+  spanClassName?: string;
+  iconClassName?: string;
+};
+
 const DropdownMenuCheckboxItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
->(({ className, children, checked, ...props }, ref) => (
-  <DropdownMenuPrimitive.CheckboxItem
-    ref={ref}
-    checked={checked}
-    className={cn(
-      'group relative flex cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-      className,
-    )}
-    {...props}
-  >
-    <span className="flex h-[1.25rem] w-[1.25rem] items-center justify-center rounded-2 border transition-colors group-data-[state=checked]:border-success group-data-[state=checked]:bg-success">
-      <DropdownMenuPrimitive.ItemIndicator>
-        <svg
-          fill="none"
-          height="11"
-          viewBox="0 0 12 11"
-          width="12"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            className="stroke-background"
-            d="M11 1.40918L4.125 9.591L1 5.87199"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-          />
-        </svg>
-      </DropdownMenuPrimitive.ItemIndicator>
-    </span>
-    {children}
-  </DropdownMenuPrimitive.CheckboxItem>
-));
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem> &
+    TDropdownMenuCheckboxItemProps
+>(
+  (
+    { className, children, checked, spanClassName, iconClassName, ...props },
+    ref,
+  ) => (
+    <DropdownMenuPrimitive.CheckboxItem
+      ref={ref}
+      checked={checked}
+      className={cn(
+        'group relative flex cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        className,
+      )}
+      {...props}
+    >
+      <span
+        className={cn(
+          'flex items-center justify-center transition-colors',
+          spanClassName,
+        )}
+      >
+        <DropdownMenuPrimitive.ItemIndicator>
+          <CheckedIcon className={iconClassName} />
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.CheckboxItem>
+  ),
+);
 DropdownMenuCheckboxItem.displayName =
   DropdownMenuPrimitive.CheckboxItem.displayName;
 
