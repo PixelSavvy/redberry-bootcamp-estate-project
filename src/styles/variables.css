@@ -1,0 +1,40 @@
+@tailwind base;
+
+@layer base {
+  :root {
+    /* colors */
+    --background: 0 0% 100%; /* #ffffff */
+    --foreground: 208 90% 8%; /* #021526 */
+    --card: 0 0% 100%; /* #ffffff */
+    --card-foreground: 208 90% 8%; /* #021526 */
+    --primary: 8 95% 55%; /* #f93b1d */
+    --primary-dark: 8 83% 48%; /* #DF3014 */
+    --primary-foreground: 0 0% 100%; /* #ffffff */
+    --secondary: 0 0% 100%; /* #ffffff */
+    --secondary-foreground: 8 95% 55%; /* #f93b1d */
+    --muted: 0 0% 95%; /* #f3f3f3 */
+    --muted-foreground: 208 90% 8%; /* #021526 */
+    --accent: 208 8% 54%; /* #808a93 */
+    --accent-foreground: 0 0% 100%; /* #ffffff */
+    --border: 0 0% 86%; /* #dbdbdb */
+    --input: 208 8% 54%; /* #808a93 */
+    --ring: 208 90% 8%; /* #021526 */
+
+    /* font family */
+    --ff-firago: 'FiraGo', sans-serif;
+
+    /* Line height */
+    --leading-relaxed: 1.6; /* 160% */
+    --leading-tight: 1.2; /* 120% */
+
+    /* Border Radius */
+    --radius-44: 4.4; /* 44px */
+    --radius-20: 2; /* 20px */
+    --radius-16: 1.6; /* 16px */
+    --radius-14: 1.4; /* 14px */
+    --radius-10: 1; /* 10px */
+    --radius-8: 0.8; /* 8px */
+    --radius-6: 0.6; /* 6px */
+    --radius-2: 0.2; /* 2px */
+  }
+}

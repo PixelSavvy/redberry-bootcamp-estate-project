@@ -1,0 +1,24 @@
+@import './variables.css';
+@import './fonts.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply flex min-h-screen flex-col items-center justify-between bg-background font-firago text-16 leading-1.6 text-foreground;
+  }
+
+  #root {
+    @apply flex h-full w-full flex-1 flex-col items-center justify-between;
+  }
+
+  main {
+    @apply container flex-1;
+  }
+}
