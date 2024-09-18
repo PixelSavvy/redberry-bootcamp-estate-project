@@ -10,7 +10,7 @@ module.exports = {
   prefix: '',
   theme: {
     container: {
-      center: true,
+      center: 'true',
       screens: {
         lg: '99.75rem',
       },
@@ -21,13 +21,13 @@ module.exports = {
         firago: 'var(--ff-firago)',
       },
       fontSize: {
-        48: '2.75rem',
-        32: '2rem',
-        28: '1.75rem',
-        24: '1.5rem',
-        16: '1rem',
-        14: '0.875rem',
         12: '0.75rem',
+        14: '0.875rem',
+        16: '1rem',
+        24: '1.5rem',
+        28: '1.75rem',
+        32: '2rem',
+        48: '2.75rem',
       },
       lineHeight: {
         1.6: '1.6',
@@ -57,7 +57,6 @@ module.exports = {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
         },
-
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
