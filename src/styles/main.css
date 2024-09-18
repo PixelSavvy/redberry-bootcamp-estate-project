@@ -11,7 +11,7 @@
   }
 
   body {
-    @apply flex min-h-screen flex-col items-center justify-between bg-background font-firago text-16 leading-1.6 text-foreground;
+    @apply flex min-h-screen flex-col items-center justify-between bg-background font-firago text-16 leading-1.2 text-foreground;
   }
 
   #root {

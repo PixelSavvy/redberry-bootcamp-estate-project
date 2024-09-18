@@ -12,7 +12,8 @@ module.exports = {
     container: {
       center: 'true',
       screens: {
-        lg: '99.75rem',
+        // lg: '99.75rem',
+        lg: '900px',
       },
     },
     extend: {
@@ -60,6 +61,7 @@ module.exports = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        success: 'hsl(var(--success))',
       },
       borderRadius: {
         2: '0.125rem',
@@ -70,6 +72,9 @@ module.exports = {
         16: '1rem',
         20: '1.25rem',
         44: '2.75rem',
+      },
+      boxShadow: {
+        'filter-content': '5px 5px 12px 0px hsla(208, 90%, 8%, 0.08)',
       },
       keyframes: {},
       animation: {},
