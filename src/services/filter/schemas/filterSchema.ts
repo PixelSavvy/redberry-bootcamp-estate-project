@@ -1,10 +1,6 @@
 import * as z from 'zod';
 
-const regionSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-});
-
+const regionsSchema = z.array(z.object({ id: z.number(), name: z.string() }));
 const priceSchema = z.object({
   min: z.number(),
   max: z.number(),
@@ -20,7 +16,7 @@ const numberOfRoomsSchema = z.object({
 });
 
 const filterSchema = z.object({
-  region: regionSchema,
+  regions: regionsSchema,
   price: priceSchema,
   area: areaSchema,
   numberOfRooms: numberOfRoomsSchema,

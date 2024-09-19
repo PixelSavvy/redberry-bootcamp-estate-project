@@ -5,3 +5,4 @@ export * from './Icons';
 export * from './Input';
 export * from './Label';
 export * from './Radio-group';
+export * from './Skeleton';

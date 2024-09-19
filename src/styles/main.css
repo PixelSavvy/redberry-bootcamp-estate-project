@@ -10,6 +10,14 @@
     @apply border-border;
   }
 
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number'] {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield !important;
+  }
+
   body {
     @apply flex min-h-screen flex-col items-center justify-between bg-background font-firago text-16 leading-1.2 text-foreground;
   }
