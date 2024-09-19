@@ -38,4 +38,12 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  input[type='file'] {
+    position: relative;
+  }
+
+  input[type='file']::file-selector-button {
+    @apply bg-background text-background;
+  }
 }
