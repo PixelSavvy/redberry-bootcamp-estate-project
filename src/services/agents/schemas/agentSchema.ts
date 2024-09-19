@@ -11,7 +11,7 @@ const VALID_IMAGE_MIME_TYPES = [
 const MAX_FILE_SIZE = 3 * 1024 * 1024;
 
 const agentSchema = z.object({
-  firstName: z
+  name: z
     .string({ message: 'სავალდებულოა' })
     .min(2, {
       message: 'მინიმუმ ორი სიმბოლო',
@@ -20,7 +20,7 @@ const agentSchema = z.object({
       message: 'მხოლოდ ქართული სიმბოლო',
     }),
 
-  lastName: z
+  surname: z
     .string({ message: 'სავალდებულოა' })
     .min(2, { message: 'მინიმუმ ორი სიმბოლო' })
     .regex(georgianLettersRegex, {
@@ -59,8 +59,8 @@ const agentSchema = z.object({
 type TAgent = z.infer<typeof agentSchema>;
 
 const defaultValues: TAgent = {
-  firstName: '',
-  lastName: '',
+  name: '',
+  surname: '',
   email: '',
   avatar: {} as File,
   phone: '',

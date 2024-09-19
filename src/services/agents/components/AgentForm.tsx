@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -26,12 +24,16 @@ import {
   type TAgent,
 } from '@/services/agents/schemas/agentSchema';
 
+import { usePostAgentMutation } from '../api/agentsApiSlice';
+
 export const AgentForm = () => {
   const form = useForm<TAgent>({
     mode: 'onSubmit',
     defaultValues,
     resolver: zodResolver(agentSchema),
   });
+
+  const [postAgent] = usePostAgentMutation();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -40,7 +42,7 @@ export const AgentForm = () => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(imageUrl);
-      form.setValue('avatar', file, { shouldValidate: true }); // Сохраняем файл в состояние формы
+      form.setValue('avatar', file, { shouldValidate: true });
     }
   };
 
@@ -49,7 +51,9 @@ export const AgentForm = () => {
     form.setValue('avatar', {} as File);
   };
 
-  const onSubmit = (_payload: TAgent) => {};
+  const onSubmit = async (payload: TAgent) => {
+    await postAgent(payload);
+  };
 
   return (
     <Form {...form}>
@@ -59,16 +63,16 @@ export const AgentForm = () => {
       >
         <FormField
           control={form.control}
-          name="firstName"
+          name="name"
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel htmlFor="firstName">სახელი*</FormLabel>
+              <FormLabel htmlFor="name">სახელი*</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={fieldState.error ? 'border-primary' : ''}
-                  id="firstName"
-                  name="firstName"
+                  id="name"
+                  name="name"
                   type="text"
                 />
               </FormControl>
@@ -87,16 +91,16 @@ export const AgentForm = () => {
         />
         <FormField
           control={form.control}
-          name="lastName"
+          name="surname"
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel htmlFor="lastName">გვარი*</FormLabel>
+              <FormLabel htmlFor="surname">გვარი*</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={fieldState.error ? 'border-primary' : ''}
-                  id="lastName"
-                  name="lastName"
+                  id="surname"
+                  name="surname"
                   type="text"
                 />
               </FormControl>

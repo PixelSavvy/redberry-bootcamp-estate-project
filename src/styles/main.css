@@ -15,6 +15,7 @@
   input[type='number'] {
     -webkit-appearance: none;
     margin: 0;
+    appearance: textfield;
     -moz-appearance: textfield !important;
   }
 
@@ -27,7 +28,7 @@
   }
 
   main {
-    @apply container flex-1;
+    @apply container flex flex-1 flex-col items-center justify-start;
   }
 }
 

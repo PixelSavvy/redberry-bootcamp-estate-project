@@ -1,18 +1,21 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
-import { filterApi } from '@/services/filter/api/filterApiSlice';
+import { agentsReducer } from '@/services/agents/slice/agentsSlice';
 import { filterReducer } from '@/services/filter/slices/filterSlice';
+
+import { api } from './apiSlice';
 
 const rootReducer = combineReducers({
   filter: filterReducer,
-  [filterApi.reducerPath]: filterApi.reducer,
+  agents: agentsReducer,
+  [api.reducerPath]: api.reducer,
 });
 
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(filterApi.middleware),
+    getDefaultMiddleware().concat(api.middleware),
 });
 
 setupListeners(store.dispatch);

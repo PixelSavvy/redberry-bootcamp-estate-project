@@ -9,7 +9,14 @@ const ListingsPage = lazy(() =>
   })),
 );
 
+const AddListingPage = lazy(() =>
+  import('@/services/listings/pages/AddListingPage').then((module) => ({
+    default: module.AddListingPage,
+  })),
+);
+
 export const elements = {
   root: RootLayout,
   listings: ListingsPage,
+  addListing: AddListingPage,
 };

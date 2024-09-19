@@ -11,7 +11,7 @@ export const RootLayout = () => {
       <main className="mt-20">
         <Outlet />
       </main>
-      <footer>Root Footer</footer>
+      <footer />
     </>
   );
 };
