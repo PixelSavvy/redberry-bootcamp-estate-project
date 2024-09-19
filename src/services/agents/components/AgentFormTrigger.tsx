@@ -14,7 +14,7 @@ import { AgentForm } from './AgentForm';
 
 export const AgentFormTrigger = () => {
   return (
-    <Dialog defaultOpen modal>
+    <Dialog modal>
       <DialogOverlay className="bg-foreground/30" />
       <DialogTrigger asChild>
         <Button variant="secondary">

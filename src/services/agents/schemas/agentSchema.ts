@@ -8,10 +8,11 @@ const VALID_IMAGE_MIME_TYPES = [
   'image/png',
   'image/webp',
 ];
+const MAX_FILE_SIZE = 3 * 1024 * 1024;
 
 const agentSchema = z.object({
   firstName: z
-    .string()
+    .string({ message: 'სავალდებულოა' })
     .min(2, {
       message: 'მინიმუმ ორი სიმბოლო',
     })
@@ -20,36 +21,38 @@ const agentSchema = z.object({
     }),
 
   lastName: z
-    .string()
+    .string({ message: 'სავალდებულოა' })
     .min(2, { message: 'მინიმუმ ორი სიმბოლო' })
     .regex(georgianLettersRegex, {
       message: 'მხოლოდ ქართული სიმბოლო',
     }),
 
   email: z
-    .string()
-    .email({})
+    .string({ message: 'სავალდებულოა' })
+    .email({
+      message: 'არასწორი ფორმატი: example@redberry.ge',
+    })
     .refine((email) => email.endsWith('@redberry.ge'), {
       message: 'გამოიყენეთ @redberry.ge ფოსტა',
     }),
   avatar: z
-    .union([z.instanceof(File), z.undefined()])
-    .optional()
-    .refine(
-      (file) =>
-        file === undefined || VALID_IMAGE_MIME_TYPES.includes(file.type),
-      {
-        message: 'არასწორი ფორმატი',
-      },
-    ),
-  phone: z
-    .string()
-    .min(9, {
-      message: 'მხოლოდ 9 ციფრი',
+    .instanceof(File, {
+      message: 'სავალდებულოა',
     })
-    .max(9, { message: 'მხოლოდ 9 ციფრი' })
+    .refine((file) => VALID_IMAGE_MIME_TYPES.includes(file.type), {
+      message: 'არასწორი ფორმატი',
+    })
+    .refine((file) => file.size <= MAX_FILE_SIZE, {
+      message: 'ფაილის ზომა უნდა იყოს 5MB-ზე ნაკლები',
+    }),
+  phone: z
+    .string({ message: 'სავალდებულოა' })
+    .min(9, {
+      message: 'მინ. 9 ციფრი',
+    })
+    .max(9, { message: 'მაქს. 9 ციფრი' })
     .regex(/^5\d{8}$/, {
-      message: 'უნდა იწყებოდეს ციფრი 5-ით და შეიცავდეს 9 ციფრს',
+      message: 'არასწორი ფორმატი: 5XXXXXXXX',
     }),
 });
 
@@ -59,7 +62,7 @@ const defaultValues: TAgent = {
   firstName: '',
   lastName: '',
   email: '',
-  avatar: undefined,
+  avatar: {} as File,
   phone: '',
 };
 

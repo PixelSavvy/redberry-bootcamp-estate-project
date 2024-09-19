@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -46,7 +46,7 @@ export const AgentForm = () => {
 
   const handleRemoveImage = () => {
     setSelectedImage(null);
-    form.setValue('avatar', undefined);
+    form.setValue('avatar', {} as File);
   };
 
   const onSubmit = (_payload: TAgent) => {};
@@ -60,15 +60,27 @@ export const AgentForm = () => {
         <FormField
           control={form.control}
           name="firstName"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel htmlFor="firstName">სახელი*</FormLabel>
               <FormControl>
-                <Input {...field} id="firstName" name="firstName" type="text" />
+                <Input
+                  {...field}
+                  className={fieldState.error ? 'border-primary' : ''}
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                />
               </FormControl>
-              <FormDescription className="flex items-center justify-start gap-2">
+              <FormDescription
+                className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
+              >
                 <CheckedIcon className="stroke-current" />
-                <span>მინიმум ორი სიმბოლო</span>
+                {fieldState.error ? (
+                  fieldState.error.message
+                ) : (
+                  <span>მინიმუმ ორი სიმბოლო</span>
+                )}
               </FormDescription>
             </FormItem>
           )}
@@ -76,15 +88,27 @@ export const AgentForm = () => {
         <FormField
           control={form.control}
           name="lastName"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel htmlFor="lastName">გვარი*</FormLabel>
               <FormControl>
-                <Input {...field} id="lastName" name="lastName" type="text" />
+                <Input
+                  {...field}
+                  className={fieldState.error ? 'border-primary' : ''}
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                />
               </FormControl>
-              <FormDescription className="flex items-center justify-start gap-2">
+              <FormDescription
+                className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
+              >
                 <CheckedIcon className="stroke-current" />
-                <span>მინიმум ორი სიმბოლო</span>
+                {fieldState.error ? (
+                  fieldState.error.message
+                ) : (
+                  <span>მინიმუმ ორი სიმბოლო</span>
+                )}
               </FormDescription>
             </FormItem>
           )}
@@ -92,21 +116,28 @@ export const AgentForm = () => {
         <FormField
           control={form.control}
           name="email"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel htmlFor="email">ელ. ფოსტა*</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   autoComplete="email"
+                  className={fieldState.error ? 'border-primary' : ''}
                   id="email"
                   name="email"
                   type="email"
                 />
               </FormControl>
-              <FormDescription className="flex items-center justify-start gap-2">
+              <FormDescription
+                className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
+              >
                 <CheckedIcon className="stroke-current" />
-                <span>გამოიყენეთ @redberry.ge ფოსტა</span>
+                {fieldState.error ? (
+                  fieldState.error.message
+                ) : (
+                  <span>გამოიყენეთ @redberry.ge ფოსტა</span>
+                )}
               </FormDescription>
             </FormItem>
           )}
@@ -114,21 +145,28 @@ export const AgentForm = () => {
         <FormField
           control={form.control}
           name="phone"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel htmlFor="phone">ტელეფონის ნომერი</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   autoComplete="tel-country-code"
+                  className={fieldState.error ? 'border-primary' : ''}
                   id="phone"
                   name="phone"
                   type="text"
                 />
               </FormControl>
-              <FormDescription className="flex items-center justify-start gap-2">
+              <FormDescription
+                className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
+              >
                 <CheckedIcon className="stroke-current" />
-                <span>მხოლოდ რიცხვები</span>
+                {fieldState.error ? (
+                  fieldState.error.message
+                ) : (
+                  <span>მინიმუმ ორი სიმბოლო</span>
+                )}
               </FormDescription>
             </FormItem>
           )}
@@ -136,10 +174,12 @@ export const AgentForm = () => {
         <FormField
           control={form.control}
           name="avatar"
-          render={({ field }) => (
+          render={({ fieldState }) => (
             <FormItem className="relative col-span-2">
               <FormLabel htmlFor="avatar">ატვირთეთ ფოტო*</FormLabel>
-              <FormControl className="relative h-[7.5rem] w-full cursor-pointer rounded-8 border border-dashed border-[#2D3648]">
+              <FormControl
+                className={`relative h-[7.5rem] w-full cursor-pointer rounded-8 border border-dashed ${fieldState.error ? 'border-primary' : 'border-[#2D3648]'}`}
+              >
                 {selectedImage ? (
                   <div className="relative flex items-center justify-center">
                     <img
@@ -168,11 +208,25 @@ export const AgentForm = () => {
                   />
                 )}
               </FormControl>
+
               {!selectedImage ? (
-                <div className="pointer-events-none absolute inset-0 top-5 flex h-[7.5rem] items-center justify-center rounded-8 border border-dashed border-[#2D3648]">
+                <div
+                  className={`pointer-events-none absolute inset-0 top-5 flex h-[7.5rem] items-center justify-center rounded-8 border border-dashed ${fieldState.error ? 'border-primary' : 'border-[#2D3648]'}`}
+                >
                   <PlusIconRounded />
                 </div>
               ) : null}
+
+              <FormDescription
+                className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
+              >
+                <CheckedIcon className="stroke-current" />
+                {fieldState.error ? (
+                  fieldState.error.message
+                ) : (
+                  <span>დაშვებული ფორმატები: png, jpg, jpeg, webp</span>
+                )}
+              </FormDescription>
             </FormItem>
           )}
         />
