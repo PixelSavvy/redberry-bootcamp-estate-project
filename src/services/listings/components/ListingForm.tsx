@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -18,14 +18,16 @@ import {
   Textarea,
   UploadImageInput,
 } from '@/components';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 import { cn } from '@/lib';
 import { paths } from '@/router/paths';
 import {
   AgentSelectInput,
   CitySelectInput,
-  defaultValues,
   listingSchema,
   RegionSelectInput,
+  selectListingFormPayload,
+  setListingFormPayload,
   type TListing,
   usePostListingMutation,
 } from '@/services/listings';
@@ -35,14 +37,35 @@ export const ListingForm = () => {
   const [regionId, setRegionId] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const navigate = useNavigate();
-
-  const [postListing] = usePostListingMutation();
+  const dispatch = useAppDispatch();
+  const reduxFormData = useAppSelector(selectListingFormPayload);
 
   const form = useForm<TListing>({
     resolver: zodResolver(listingSchema),
-    defaultValues,
+    defaultValues: reduxFormData,
   });
+
+  const handleChange = (
+    field: keyof TListing,
+    value: string | number | File,
+  ) => {
+    dispatch(
+      setListingFormPayload({
+        ...reduxFormData,
+        [field]: value,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (reduxFormData.region_id) {
+      setRegionId(reduxFormData.region_id);
+    }
+  }, [reduxFormData.region_id]);
+
+  const navigate = useNavigate();
+
+  const [postListing] = usePostListingMutation();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,6 +79,7 @@ export const ListingForm = () => {
   const handleRemoveImage = () => {
     setSelectedImage(null);
     form.setValue('image', {} as File);
+    handleChange('image', {} as File);
   };
 
   const onSubmit = async (payload: TListing) => {
@@ -65,6 +89,7 @@ export const ListingForm = () => {
     });
 
     await postListing(formData);
+    // dispatch(resetListingFormPayload());
     navigate(paths.listings);
   };
 
@@ -95,6 +120,10 @@ export const ListingForm = () => {
                     name="is_rental"
                     value={field.value}
                     onValueChange={field.onChange}
+                    onChange={() => {
+                      field.onChange(field.value);
+                      handleChange('is_rental', field.value);
+                    }}
                   >
                     <FormItem className="flex items-center justify-start gap-2 space-y-0">
                       <FormControl>
@@ -134,11 +163,15 @@ export const ListingForm = () => {
                 <FormLabel htmlFor="address">მისამართი*</FormLabel>
                 <FormControl>
                   <Input
+                    autoComplete="address"
                     className={inputErrorClass(Boolean(fieldState.error))}
                     id="address"
                     type="text"
                     {...field}
-                    autoComplete="address"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      handleChange('address', e.target.value);
+                    }}
                   />
                 </FormControl>
                 <CustomFormMessage
@@ -161,6 +194,10 @@ export const ListingForm = () => {
                     id="zip_code"
                     {...field}
                     type="number"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      handleChange('zip_code', e.target.value);
+                    }}
                   />
                 </FormControl>
                 <CustomFormMessage
@@ -185,6 +222,7 @@ export const ListingForm = () => {
                       form.clearErrors('region_id');
                       field.onChange(id);
                       setRegionId(id);
+                      handleChange('region_id', id);
                     }}
                   />
                 </FormControl>
@@ -207,6 +245,7 @@ export const ListingForm = () => {
                       form.setValue('city_id', id);
                       form.clearErrors('city_id');
                       field.onChange(id);
+                      handleChange('city_id', id);
                     }}
                   />
                 </FormControl>
@@ -235,6 +274,10 @@ export const ListingForm = () => {
                     id="price"
                     type="number"
                     {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      handleChange('price', e.target.value);
+                    }}
                   />
                 </FormControl>
                 <span className="absolute right-2.5 top-1/4 translate-y-1/2 transform text-[#2D3648]">
@@ -260,6 +303,10 @@ export const ListingForm = () => {
                     {...field}
                     id="area"
                     type="number"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      handleChange('area', e.target.value);
+                    }}
                   />
                 </FormControl>
                 <span className="absolute right-2.5 top-1/4 translate-y-1/2 transform text-[#2D3648]">
@@ -287,6 +334,10 @@ export const ListingForm = () => {
                     {...field}
                     id="bedrooms"
                     type="number"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      handleChange('bedrooms', e.target.value);
+                    }}
                   />
                 </FormControl>
                 <CustomFormMessage
@@ -309,6 +360,10 @@ export const ListingForm = () => {
                     id="description"
                     rows={6}
                     {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      handleChange('description', e.target.value);
+                    }}
                   />
                 </FormControl>
                 <CustomFormMessage
@@ -367,6 +422,7 @@ export const ListingForm = () => {
                       form.setValue('agent_id', id);
                       form.clearErrors('agent_id');
                       field.onChange(id);
+                      handleChange('agent_id', id);
                     }}
                   />
                 </FormControl>

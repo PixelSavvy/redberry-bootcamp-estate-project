@@ -10,6 +10,7 @@ import { useGetCitiesQuery } from '@/services/filter';
 export const CitySelectInput = ({
   onValueChange,
   regionId,
+  value,
 }: {
   onValueChange: (id: string) => void;
   value: string;
@@ -26,6 +27,7 @@ export const CitySelectInput = ({
       required
       disabled={!regionId}
       name="city_id"
+      value={value}
       onValueChange={(id) => {
         onValueChange(id);
       }}

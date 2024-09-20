@@ -79,16 +79,16 @@ type TListing = z.infer<typeof listingSchema>;
 
 const defaultValues: TListing = {
   address: '',
-  description: '',
   region_id: '',
   city_id: '',
   agent_id: '',
+  description: '',
   zip_code: '',
   price: '',
   area: '',
   bedrooms: '',
-  is_rental: '0',
   image: {} as File,
+  is_rental: '0',
 };
 
 export { defaultValues, listingSchema, type TListing };
