@@ -17,7 +17,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      'flex h-10 w-full items-center justify-between rounded-6 border border-input bg-background p-2.5 text-[0.875rem] ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=open]:rounded-b-none data-[state=open]:border-b-0 [&>span]:line-clamp-1',
+      'flex h-10 w-full items-center justify-between rounded-6 border border-input bg-background p-2.5 text-[0.875rem] ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=open]:rounded-b-none [&>span]:line-clamp-1',
       className,
     )}
     {...props}
@@ -37,7 +37,7 @@ const SelectScrollUpButton = React.forwardRef<
   <SelectPrimitive.ScrollUpButton
     ref={ref}
     className={cn(
-      'flex cursor-default items-center justify-center py-1',
+      'flex hidden cursor-default items-center justify-center py-1',
       className,
     )}
     {...props}
@@ -90,7 +90,7 @@ const SelectContent = React.forwardRef<
       >
         {children}
       </SelectPrimitive.Viewport>
-      <SelectScrollDownButton />
+      <SelectScrollDownButton className="hidden" />
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
 ));
@@ -115,7 +115,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex w-full cursor-pointer select-none items-center border-b border-input bg-background px-2.5 py-3 text-[0.875rem] outline-none transition-colors first:border-y last:border-b-0 focus:text-foreground/60 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex w-full cursor-pointer select-none items-center border-b border-input bg-background px-2.5 py-3 text-[0.875rem] outline-none transition-colors first:border-b last:border-b-0 focus:text-foreground/60 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className,
     )}
     {...props}

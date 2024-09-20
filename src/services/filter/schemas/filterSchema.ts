@@ -1,6 +1,17 @@
 import * as z from 'zod';
 
 const regionsSchema = z.array(z.object({ id: z.number(), name: z.string() }));
+const citiesSchema = z.array(
+  z.object({
+    id: z.number(),
+    name: z.string(),
+    region_id: z.number(),
+    region: z.object({
+      id: z.number(),
+      name: z.string(),
+    }),
+  }),
+);
 
 const priceSchema = z.object({
   min: z.number(),
@@ -21,5 +32,6 @@ const filterSchema = z.object({
 });
 
 type TFilter = z.infer<typeof filterSchema>;
+type TCities = z.infer<typeof citiesSchema>;
 
-export type { TFilter, filterSchema };
+export type { TCities, TFilter, citiesSchema, filterSchema };

@@ -11,6 +11,7 @@ export const mapped = {
       path: paths.listings,
       element: elements.listings,
     },
+
     {
       path: paths.addListing,
       element: elements.addListing,

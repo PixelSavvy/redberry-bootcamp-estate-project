@@ -61,9 +61,11 @@ module.exports = {
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         success: 'hsl(var(--success))',
+        borderUpload: 'hsl(var( --border-upload))',
       },
       borderRadius: {
         2: '0.125rem',
+        4: '0.25rem',
         6: '0.375rem',
         8: '0.5rem',
         10: '0.625rem',

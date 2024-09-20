@@ -1,6 +1,6 @@
 import { apiSlice } from '@/api';
 
-import { type TFilter } from '../schemas/filterSchema';
+import { type TCities, type TFilter } from '../schemas/filterSchema';
 
 const filterApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,7 +10,13 @@ const filterApiSlice = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getCities: builder.query<TCities, null>({
+      query: () => ({
+        url: import.meta.env.VITE_CITIES_URL,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useGetRegionsQuery } = filterApiSlice;
+export const { useGetRegionsQuery, useGetCitiesQuery } = filterApiSlice;

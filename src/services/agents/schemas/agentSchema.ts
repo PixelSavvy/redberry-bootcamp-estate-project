@@ -1,34 +1,24 @@
 import * as z from 'zod';
 
-const georgianLettersRegex = /^[\u10A0-\u10FF]+$/;
-
 const VALID_IMAGE_MIME_TYPES = [
   'image/jpeg',
   'image/jpg',
   'image/png',
   'image/webp',
 ];
-const MAX_FILE_SIZE = 3 * 1024 * 1024;
+const MAX_FILE_SIZE = 1 * 1024 * 1024;
 
 const agentSchema = z.object({
-  name: z
-    .string({ message: 'სავალდებულოა' })
-    .min(2, {
-      message: 'მინიმუმ ორი სიმბოლო',
-    })
-    .regex(georgianLettersRegex, {
-      message: 'მხოლოდ ქართული სიმბოლო',
-    }),
-
+  id: z.number().optional(),
+  name: z.string({ message: 'სავალდებულოა' }).min(2, {
+    message: 'მინიმუმ ორი სიმბოლო',
+  }),
   surname: z
     .string({ message: 'სავალდებულოა' })
-    .min(2, { message: 'მინიმუმ ორი სიმბოლო' })
-    .regex(georgianLettersRegex, {
-      message: 'მხოლოდ ქართული სიმბოლო',
-    }),
-
+    .min(2, { message: 'მინიმუმ ორი სიმბოლო' }),
   email: z
-    .string({ message: 'სავალდებულოა' })
+    .string()
+    .min(1, { message: 'სავალდებულოა' })
     .email({
       message: 'არასწორი ფორმატი: example@redberry.ge',
     })
@@ -43,10 +33,13 @@ const agentSchema = z.object({
       message: 'არასწორი ფორმატი',
     })
     .refine((file) => file.size <= MAX_FILE_SIZE, {
-      message: 'ფაილის ზომა უნდა იყოს 5MB-ზე ნაკლები',
+      message: 'ფაილის ზომა უნდა იყოს 1MB-ზე ნაკლები',
     }),
   phone: z
     .string({ message: 'სავალდებულოა' })
+    .min(1, {
+      message: 'სავალდებულოა',
+    })
     .min(9, {
       message: 'მინ. 9 ციფრი',
     })
@@ -59,6 +52,7 @@ const agentSchema = z.object({
 type TAgent = z.infer<typeof agentSchema>;
 
 const defaultValues: TAgent = {
+  id: 0,
   name: '',
   surname: '',
   email: '',

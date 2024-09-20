@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import {
   Button,
   Dialog,
@@ -9,19 +10,28 @@ import {
   DialogTrigger,
   PlusIcon,
 } from '@/components/ui';
+import { AgentForm } from '@/services/agents';
 
-import { AgentForm } from './AgentForm';
-
-export const AgentFormTrigger = () => {
+export const AgentFormTrigger = ({
+  isGhost,
+  isOpen,
+  setIsOpen,
+}: {
+  isGhost: boolean;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}) => {
   return (
-    <Dialog modal>
-      <DialogOverlay className="bg-foreground/30" />
-      <DialogTrigger asChild>
-        <Button variant="secondary">
-          <PlusIcon className="fill-current" />
-          <span>აგენტის დამატება</span>
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogOverlay className="z-50 bg-foreground/30" />
+      {!isGhost ? (
+        <DialogTrigger asChild>
+          <Button variant="secondary">
+            <PlusIcon className="fill-current" />
+            <span>აგენტის დამატება</span>
+          </Button>
+        </DialogTrigger>
+      ) : null}
       <DialogContent
         className="flex w-[62.5rem] flex-col items-center justify-between px-[6.5rem] py-[5.5rem]"
         onCloseAutoFocus={(e) => {
@@ -34,9 +44,7 @@ export const AgentFormTrigger = () => {
           </DialogTitle>
           <DialogDescription />
         </DialogHeader>
-        <section className="w-full">
-          <AgentForm />
-        </section>
+        {isOpen ? <AgentForm setIsOpen={setIsOpen} /> : null}
       </DialogContent>
     </Dialog>
   );

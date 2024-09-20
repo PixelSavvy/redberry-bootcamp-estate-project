@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -6,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import {
   Button,
   CheckedIcon,
-  DeleteIconRounded,
+  CustomFormMessage,
   DialogClose,
   DialogFooter,
   Form,
@@ -16,17 +17,21 @@ import {
   FormItem,
   FormLabel,
   Input,
-  PlusIconRounded,
-} from '@/components/ui';
+  UploadImageInput,
+} from '@/components';
 import {
   agentSchema,
   defaultValues,
   type TAgent,
-} from '@/services/agents/schemas/agentSchema';
+  usePostAgentMutation,
+} from '@/services/agents';
+import { inputErrorClass } from '@/utils';
 
-import { usePostAgentMutation } from '../api/agentsApiSlice';
-
-export const AgentForm = () => {
+export const AgentForm = ({
+  setIsOpen,
+}: {
+  setIsOpen: (isOpen: boolean) => void;
+}) => {
   const form = useForm<TAgent>({
     defaultValues,
     resolver: zodResolver(agentSchema),
@@ -59,6 +64,7 @@ export const AgentForm = () => {
     formData.append('avatar', payload.avatar);
 
     await postAgent(formData);
+    setIsOpen(false);
   };
 
   return (
@@ -67,6 +73,7 @@ export const AgentForm = () => {
         className="grid w-full grid-cols-2 gap-x-7 gap-y-8"
         onSubmit={form.handleSubmit(onSubmit)}
       >
+        {/* name */}
         <FormField
           control={form.control}
           name="name"
@@ -76,25 +83,20 @@ export const AgentForm = () => {
               <FormControl>
                 <Input
                   {...field}
-                  className={fieldState.error ? 'border-primary' : ''}
+                  className={inputErrorClass(Boolean(fieldState.error))}
                   id="name"
                   name="name"
                   type="text"
                 />
               </FormControl>
-              <FormDescription
-                className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
-              >
-                <CheckedIcon className="stroke-current" />
-                {fieldState.error ? (
-                  fieldState.error.message
-                ) : (
-                  <span>მინიმუმ ორი სიმბოლო</span>
-                )}
-              </FormDescription>
+              <CustomFormMessage
+                fieldState={fieldState}
+                message="მინიმუმ ორი სიმბოლო"
+              />
             </FormItem>
           )}
         />
+        {/* surname */}
         <FormField
           control={form.control}
           name="surname"
@@ -104,7 +106,7 @@ export const AgentForm = () => {
               <FormControl>
                 <Input
                   {...field}
-                  className={fieldState.error ? 'border-primary' : ''}
+                  className={inputErrorClass(Boolean(fieldState.error))}
                   id="surname"
                   name="surname"
                   type="text"
@@ -123,6 +125,7 @@ export const AgentForm = () => {
             </FormItem>
           )}
         />
+        {/* email */}
         <FormField
           control={form.control}
           name="email"
@@ -133,25 +136,20 @@ export const AgentForm = () => {
                 <Input
                   {...field}
                   autoComplete="email"
-                  className={fieldState.error ? 'border-primary' : ''}
+                  className={inputErrorClass(Boolean(fieldState.error))}
                   id="email"
                   name="email"
                   type="email"
                 />
               </FormControl>
-              <FormDescription
-                className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
-              >
-                <CheckedIcon className="stroke-current" />
-                {fieldState.error ? (
-                  fieldState.error.message
-                ) : (
-                  <span>გამოიყენეთ @redberry.ge ფოსტა</span>
-                )}
-              </FormDescription>
+              <CustomFormMessage
+                fieldState={fieldState}
+                message="გამოიყენეთ @redberry.ge ფოსტა"
+              />
             </FormItem>
           )}
         />
+        {/* phone */}
         <FormField
           control={form.control}
           name="phone"
@@ -162,85 +160,45 @@ export const AgentForm = () => {
                 <Input
                   {...field}
                   autoComplete="tel-country-code"
-                  className={fieldState.error ? 'border-primary' : ''}
+                  className={inputErrorClass(Boolean(fieldState.error))}
                   id="phone"
                   name="phone"
                   type="text"
                 />
               </FormControl>
-              <FormDescription
-                className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
-              >
-                <CheckedIcon className="stroke-current" />
-                {fieldState.error ? (
-                  fieldState.error.message
-                ) : (
-                  <span>მინიმუმ ორი სიმბოლო</span>
-                )}
-              </FormDescription>
+              <CustomFormMessage
+                fieldState={fieldState}
+                message="მინიმუმ ორი სიმბოლო"
+              />
             </FormItem>
           )}
         />
+        {/* avatar */}
         <FormField
           control={form.control}
           name="avatar"
           render={({ fieldState }) => (
             <FormItem className="relative col-span-2">
               <FormLabel htmlFor="avatar">ატვირთეთ ფოტო*</FormLabel>
-              <FormControl
-                className={`relative h-[7.5rem] w-full cursor-pointer rounded-8 border border-dashed ${fieldState.error ? 'border-primary' : 'border-[#2D3648]'}`}
-              >
-                {selectedImage ? (
-                  <div className="relative flex items-center justify-center">
-                    <img
-                      alt="Upload Preview"
-                      className="rounded-4 aspect-square h-20 w-20 object-cover"
-                      src={selectedImage}
-                    />
-                    <div className="absolute left-1/2 top-1/2 translate-x-7 translate-y-6">
-                      <Button
-                        className="h-6 w-6"
-                        variant="icon"
-                        onClick={handleRemoveImage}
-                      >
-                        <DeleteIconRounded />
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <Input
-                    accept="image/*"
-                    className="h-[7.5rem] opacity-0"
-                    id="avatar"
-                    name="avatar"
-                    type="file"
-                    onChange={handleImageChange}
-                  />
-                )}
+              <FormControl className="relative w-full">
+                <UploadImageInput
+                  handleImageChange={handleImageChange}
+                  handleRemoveImage={handleRemoveImage}
+                  id="avatar"
+                  isError={Boolean(fieldState.error)}
+                  selectedImage={selectedImage}
+                />
               </FormControl>
 
-              {!selectedImage ? (
-                <div
-                  className={`pointer-events-none absolute inset-0 top-5 flex h-[7.5rem] items-center justify-center rounded-8 border border-dashed ${fieldState.error ? 'border-primary' : 'border-[#2D3648]'}`}
-                >
-                  <PlusIconRounded />
-                </div>
-              ) : null}
-
-              <FormDescription
-                className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
-              >
-                <CheckedIcon className="stroke-current" />
-                {fieldState.error ? (
-                  fieldState.error.message
-                ) : (
-                  <span>დაშვებული ფორმატები: png, jpg, jpeg, webp</span>
-                )}
-              </FormDescription>
+              <CustomFormMessage
+                fieldState={fieldState}
+                message="დაშვებული ფორმატები: png, jpg, jpeg, webp"
+              />
             </FormItem>
           )}
         />
 
+        {/* Actions */}
         <DialogFooter className="col-span-2 mt-24 flex items-center justify-between gap-2">
           <DialogClose asChild>
             <Button variant="secondary">გაუქმება</Button>

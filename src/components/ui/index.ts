@@ -9,3 +9,4 @@ export * from './Label';
 export * from './RadioGroup';
 export * from './Select';
 export * from './Skeleton';
+export * from './Textarea';

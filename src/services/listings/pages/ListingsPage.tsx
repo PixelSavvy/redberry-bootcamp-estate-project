@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Button, PlusIcon } from '@/components/ui';
@@ -6,6 +7,8 @@ import { AgentFormTrigger } from '@/services/agents/components/AgentFormTrigger'
 import { Filter } from '@/services/filter';
 
 export const ListingsPage = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   return (
     <section className="mt-76 w-full">
       <div className="flex items-center justify-between">
@@ -19,7 +22,11 @@ export const ListingsPage = () => {
               <span>ლისტინგის დამატება</span>
             </Link>
           </Button>
-          <AgentFormTrigger />
+          <AgentFormTrigger
+            isGhost={false}
+            isOpen={isDialogOpen}
+            setIsOpen={setIsDialogOpen}
+          />
         </div>
       </div>
     </section>
