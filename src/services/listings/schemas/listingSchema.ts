@@ -9,7 +9,7 @@ const listingSchema = z.object({
   price: z.number(),
   area: z.number(),
   bedrooms: z.number(),
-  is_rental: z.number(),
+  is_rental: z.union([z.literal(0), z.literal(1)]),
   agent_id: z.number(),
 });
 

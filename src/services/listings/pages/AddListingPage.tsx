@@ -13,8 +13,11 @@ import {
   FormItem,
   FormLabel,
   Input,
+  RadioGroup,
+  RadioGroupItem,
 } from '@/components/ui';
 
+import { RegionSelect } from './RegionSelect';
 import {
   defaultValues,
   listingSchema,
@@ -39,12 +42,52 @@ export const AddListingPage = () => {
             className="grid grid-cols-1 gap-20"
             onSubmit={form.handleSubmit(onSubmit)}
           >
+            {/* IsRental */}
+            <div className="grid w-full grid-cols-2 gap-5">
+              <h2 className="col-span-2 font-medium uppercase text-[#1A1A1F]">
+                {/* Change font family to Helvetica Neue */}
+                გარიგების ტიპი
+              </h2>
+
+              {/* IsRental */}
+              <FormField
+                control={form.control}
+                name="is_rental"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl className="grid grid-cols-2">
+                      <RadioGroup
+                        className="flex items-center justify-start gap-[5.25rem]"
+                        defaultValue="0"
+                        onValueChange={field.onChange}
+                      >
+                        <FormItem className="flex items-center justify-start gap-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="0" />
+                          </FormControl>
+                          <FormLabel className="font-normal">იყიდება</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center justify-start gap-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="1" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            ქირავდება
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+            {/* Location */}
             <div className="grid w-full grid-cols-2 gap-5">
               <h2 className="col-span-2 font-medium uppercase text-[#1A1A1F]">
                 {/* Change font family to Helvetica Neue */}
                 მდებარეობა
               </h2>
-
+              {/* Location */}
               <FormField
                 control={form.control}
                 name="address"
@@ -70,6 +113,7 @@ export const AddListingPage = () => {
                   </FormItem>
                 )}
               />
+              {/* ZipCode */}
               <FormField
                 control={form.control}
                 name="zip_code"
@@ -95,63 +139,46 @@ export const AddListingPage = () => {
                   </FormItem>
                 )}
               />
+              {/* Region */}
               <FormField
                 control={form.control}
-                name="zip_code"
-                render={({ field, fieldState }) => (
-                  <FormItem>
+                name="region_id"
+                render={({ field }) => (
+                  <FormItem className="relative">
                     <FormLabel>რეგიონი</FormLabel>
                     <FormControl>
-                      <Input
-                        className={fieldState.error ? 'border-primary' : ''}
-                        {...field}
-                      />
+                      <Input className="opacity-0" {...field} />
                     </FormControl>
-                    <FormDescription
-                      className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
-                    >
-                      <CheckedIcon className="stroke-current" />
-                      {fieldState.error ? (
-                        fieldState.error.message
-                      ) : (
-                        <span>მხოლოდ რიცხვები</span>
-                      )}
-                    </FormDescription>
+                    {/* Select region component */}
+                    <div className="absolute top-5 w-full">
+                      <RegionSelect />
+                    </div>
+                    {/* ************************ */}
                   </FormItem>
                 )}
               />
+              {/* City */}
               <FormField
                 control={form.control}
-                name="zip_code"
-                render={({ field, fieldState }) => (
+                name="city_id"
+                render={({ field }) => (
                   <FormItem>
-                    <FormLabel>რეგიონი</FormLabel>
+                    <FormLabel>ქალაქი</FormLabel>
                     <FormControl>
-                      <Input
-                        className={fieldState.error ? 'border-primary' : ''}
-                        {...field}
-                      />
+                      <Input {...field} />
                     </FormControl>
-                    <FormDescription
-                      className={`flex items-center justify-start gap-2 ${fieldState.error ? 'text-primary' : ''} ${!fieldState.error && fieldState.isDirty ? 'text-success' : ''} ${!fieldState.error && !fieldState.isTouched ? 'text-foreground' : ''} `}
-                    >
-                      <CheckedIcon className="stroke-current" />
-                      {fieldState.error ? (
-                        fieldState.error.message
-                      ) : (
-                        <span>მხოლოდ რიცხვები</span>
-                      )}
-                    </FormDescription>
                   </FormItem>
                 )}
               />
             </div>
+            {/* Flat details */}
             <div className="grid w-full grid-cols-2 gap-5">
               <h2 className="col-span-2 font-medium uppercase text-[#1A1A1F]">
                 {/* Change font family to Helvetica Neue */}
                 ბინის დეტალები
               </h2>
 
+              {/* Price */}
               <FormField
                 control={form.control}
                 name="price"
@@ -177,6 +204,7 @@ export const AddListingPage = () => {
                   </FormItem>
                 )}
               />
+              {/* Area */}
               <FormField
                 control={form.control}
                 name="area"
@@ -202,6 +230,7 @@ export const AddListingPage = () => {
                   </FormItem>
                 )}
               />
+              {/* Bedrooms */}
               <FormField
                 control={form.control}
                 name="bedrooms"
@@ -227,6 +256,7 @@ export const AddListingPage = () => {
                   </FormItem>
                 )}
               />
+              {/* Desription */}
               <FormField
                 control={form.control}
                 name="description"
@@ -254,6 +284,7 @@ export const AddListingPage = () => {
                 )}
               />
             </div>
+            {/* CTA */}
             <div className="ml-auto mt-[5.75rem] space-x-4">
               <Button variant="secondary">გააუქმე</Button>
               <Button type="submit">დამატე ლისტინგი</Button>
