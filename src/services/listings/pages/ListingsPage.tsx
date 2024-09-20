@@ -1,6 +1,9 @@
+import { Link } from 'react-router-dom';
+
 import { Button, PlusIcon } from '@/components/ui';
+import { paths } from '@/router/paths';
 import { AgentFormTrigger } from '@/services/agents/components/AgentFormTrigger';
-import { Filter } from '@/services/filter/components/Filter';
+import { Filter } from '@/services/filter';
 
 export const ListingsPage = () => {
   return (
@@ -10,9 +13,11 @@ export const ListingsPage = () => {
           <Filter />
         </section>
         <div className="flex items-center justify-between gap-4">
-          <Button>
-            <PlusIcon className="fill-current" />
-            <span>ლისტინგის დამატება</span>
+          <Button asChild>
+            <Link to={paths.addListing}>
+              <PlusIcon className="fill-current" />
+              <span>ლისტინგის დამატება</span>
+            </Link>
           </Button>
           <AgentFormTrigger />
         </div>

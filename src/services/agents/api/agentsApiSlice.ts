@@ -1,31 +1,27 @@
-import { api } from '@/store/apiSlice';
+import { apiSlice } from '@/api';
 
-import { type TAgent } from '../schemas/agentSchema';
-
-const agentsApi = api.injectEndpoints({
+const agentsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    postAgent: builder.mutation({
-      query: (payload: TAgent) => ({
-        url: import.meta.env.VITE_AGENTS_API,
-        method: 'POST',
-        body: {
-          ...payload,
+    getAgents: builder.query({
+      query: () => ({
+        url: import.meta.env.VITE_AGENTS_URL,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_AUTH_TOKEN}`,
         },
       }),
     }),
-
-    getAgents: builder.query({
-      query: () => ({
-        url: import.meta.env.VITE_AGENTS_API,
-        method: 'GET',
-        validateStatus: (response) => {
-          return response.status === 200;
+    postAgent: builder.mutation({
+      query: (payload: FormData) => ({
+        url: import.meta.env.VITE_AGENTS_URL,
+        method: 'POST',
+        body: payload,
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_AUTH_TOKEN}`,
         },
       }),
     }),
   }),
 });
 
-const { usePostAgentMutation, useGetAgentsQuery } = agentsApi;
-
-export { agentsApi, useGetAgentsQuery, usePostAgentMutation };
+export const { useGetAgentsQuery, usePostAgentMutation } = agentsApiSlice;

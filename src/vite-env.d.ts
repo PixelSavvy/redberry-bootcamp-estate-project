@@ -1,12 +1,10 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_BASE_API: string;
   readonly VITE_AUTH_TOKEN: string;
-  readonly VITE_REGIONS_API: string;
-  readonly VITE_CITIES_API: string;
-  readonly VITE_AGENTS_API: string;
-  readonly VITE_LISTINGS_API: string;
+  readonly VITE_BASE_URL: string;
+  readonly VITE_REGIONS_URL: string;
+  readonly VITE_AGENTS_URL: string;
 }
 
 interface ImportMeta {

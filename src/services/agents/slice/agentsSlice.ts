@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { type TRootState } from '@/store/store';
+import { type TRootState } from '@/store';
 
 import { type TAgent } from '../schemas/agentSchema';
 

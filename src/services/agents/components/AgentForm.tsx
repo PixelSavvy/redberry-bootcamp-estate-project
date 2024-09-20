@@ -28,7 +28,6 @@ import { usePostAgentMutation } from '../api/agentsApiSlice';
 
 export const AgentForm = () => {
   const form = useForm<TAgent>({
-    mode: 'onSubmit',
     defaultValues,
     resolver: zodResolver(agentSchema),
   });
@@ -52,7 +51,14 @@ export const AgentForm = () => {
   };
 
   const onSubmit = async (payload: TAgent) => {
-    await postAgent(payload);
+    const formData = new FormData();
+    formData.append('name', payload.name);
+    formData.append('surname', payload.surname);
+    formData.append('email', payload.email);
+    formData.append('phone', payload.phone);
+    formData.append('avatar', payload.avatar);
+
+    await postAgent(formData);
   };
 
   return (
