@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -67,7 +68,7 @@ export const ListingForm = () => {
 
   const navigate = useNavigate();
 
-  const [postListing, { isLoading, isSuccess }] = usePostListingMutation();
+  const [postListing, { isLoading }] = usePostListingMutation();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -95,9 +96,12 @@ export const ListingForm = () => {
       }
     });
 
-    await postListing(formData);
-    dispatch(resetListingFormPayload());
-    isSuccess && navigate(paths.listings);
+    await postListing(formData)
+      .unwrap()
+      .finally(() => {
+        navigate(paths.listings);
+        dispatch(resetListingFormPayload());
+      });
   };
 
   return (
@@ -451,6 +455,9 @@ export const ListingForm = () => {
               loading={isLoading}
               size={20}
               speedMultiplier={0.75}
+              onClick={() => {
+                navigate(paths.listings);
+              }}
             />
             <span>დაამატე ლისტინგი</span>
           </Button>

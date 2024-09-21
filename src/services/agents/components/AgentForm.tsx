@@ -1,7 +1,6 @@
-/* eslint-disable import/no-cycle */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ClipLoader } from 'react-spinners';
 
@@ -38,7 +37,7 @@ export const AgentForm = ({
     resolver: zodResolver(agentSchema),
   });
 
-  const [postAgent, { isLoading }] = usePostAgentMutation();
+  const [postAgent, { isLoading, isSuccess }] = usePostAgentMutation();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -56,6 +55,12 @@ export const AgentForm = ({
     form.setValue('avatar', {} as File);
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      setIsOpen(false);
+    }
+  }, [isSuccess, setIsOpen]);
+
   const onSubmit = async (payload: TAgent) => {
     const formData = new FormData();
     formData.append('name', payload.name);
@@ -65,8 +70,6 @@ export const AgentForm = ({
     formData.append('avatar', payload.avatar);
 
     await postAgent(formData);
-
-    setIsOpen(false);
   };
 
   return (
@@ -206,7 +209,13 @@ export const AgentForm = ({
             <Button variant="secondary">გაუქმება</Button>
           </DialogClose>
 
-          <Button className="m-0 space-x-1" type="submit">
+          <Button
+            className="m-0 space-x-1"
+            type="submit"
+            onClick={() => {
+              isSuccess && setIsOpen(false);
+            }}
+          >
             <ClipLoader
               aria-label="Loading Spinner"
               color="white"
