@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-import { CheckedIcon } from './Icons';
+import { CheckedIcon } from './icons';
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
