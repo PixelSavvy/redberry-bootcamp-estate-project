@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import {
   Button,
@@ -18,6 +19,7 @@ import { FilterVariants } from './FilterVariants';
 
 export const PriceFilter = () => {
   const dispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const variants = [50000, 100000, 150000, 200000, 300000];
 
@@ -29,18 +31,21 @@ export const PriceFilter = () => {
   const priceState = useAppSelector(selectPrice);
 
   useEffect(() => {
-    if (priceState.min !== 0) {
+    const queryMinPrice = searchParams.get('minPrice');
+    const queryMaxPrice = searchParams.get('maxPrice');
+
+    if (queryMinPrice) {
+      setMinPrice(queryMinPrice);
+    } else if (priceState.min !== 0) {
       setMinPrice(priceState.min.toString());
-    } else {
-      setMinPrice('');
     }
 
-    if (priceState.max !== 0) {
+    if (queryMaxPrice) {
+      setMaxPrice(queryMaxPrice);
+    } else if (priceState.max !== 0) {
       setMaxPrice(priceState.max.toString());
-    } else {
-      setMaxPrice('');
     }
-  }, [priceState]);
+  }, [searchParams, priceState]);
 
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -81,6 +86,22 @@ export const PriceFilter = () => {
         max: Number(maxPrice),
       }),
     );
+
+    const currentParams = new URLSearchParams(searchParams.toString());
+
+    if (minPrice) {
+      currentParams.set('minPrice', minPrice);
+    } else {
+      currentParams.delete('minPrice');
+    }
+
+    if (maxPrice) {
+      currentParams.set('maxPrice', maxPrice);
+    } else {
+      currentParams.delete('maxPrice');
+    }
+
+    setSearchParams(currentParams);
 
     setIsOpen(false);
   };

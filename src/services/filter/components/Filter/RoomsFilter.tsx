@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import {
   Button,
@@ -11,24 +12,27 @@ import {
 } from '@/components/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { cn } from '@/lib';
-import { selectNumberOfRooms, setNumberOfRooms } from '@/services/filter'; // Импортируем selectNumberOfRooms
+import { selectNumberOfRooms, setNumberOfRooms } from '@/services/filter';
 
 export const RoomsFilter = () => {
   const dispatch = useAppDispatch();
-
   const roomsState = useAppSelector(selectNumberOfRooms);
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const [rooms, setRooms] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (roomsState !== 0) {
+    const queryRooms = searchParams.get('rooms');
+
+    if (queryRooms) {
+      setRooms(queryRooms);
+    } else if (roomsState !== 0) {
       setRooms(roomsState.toString());
     } else {
       setRooms('');
     }
-  }, [roomsState]);
+  }, [roomsState, searchParams]);
 
   const handleRoomsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -52,6 +56,15 @@ export const RoomsFilter = () => {
     }
 
     dispatch(setNumberOfRooms(numRooms));
+
+    setSearchParams({
+      rooms,
+    });
+
+    const currentParams = new URLSearchParams(searchParams.toString());
+    currentParams.set('rooms', rooms);
+    setSearchParams(currentParams);
+
     setIsOpen(false);
   };
 

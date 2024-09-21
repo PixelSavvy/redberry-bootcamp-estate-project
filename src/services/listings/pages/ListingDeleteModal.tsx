@@ -19,7 +19,7 @@ import { useDeleteListingMutation } from '@/services/listings';
 type TListinDeleteModalProps = {
   isDialogOpen: boolean;
   setIsDialogOpen: (isOpen: boolean) => void;
-  id: string;
+  id: number | undefined;
 };
 
 export const ListingDeleteModal: FC<TListinDeleteModalProps> = ({
@@ -32,6 +32,7 @@ export const ListingDeleteModal: FC<TListinDeleteModalProps> = ({
   const [deleteListing, { isLoading, isSuccess }] = useDeleteListingMutation();
 
   const deleteListingHandler = async () => {
+    if (!id) return;
     await deleteListing(id).finally(() => {
       setIsDialogOpen(false);
       navigate(paths.listings);

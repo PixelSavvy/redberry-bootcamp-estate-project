@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import {
   Button,
@@ -11,19 +12,15 @@ import {
   DropdownMenuTrigger,
   Skeleton,
 } from '@/components/ui';
-import { useAppDispatch, useAppSelector } from '@/hooks';
-import {
-  selectRegions,
-  setRegions,
-  useGetRegionsQuery,
-} from '@/services/filter';
+import { useAppDispatch } from '@/hooks';
+import { setRegions, useGetRegionsQuery } from '@/services/filter';
 
 export const RegionFilter = () => {
   const [selectedRegions, setSelectedRegions] = useState<number[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
-  const regionState = useAppSelector(selectRegions);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const {
     data: regions,
@@ -33,9 +30,39 @@ export const RegionFilter = () => {
   } = useGetRegionsQuery(null);
 
   useEffect(() => {
-    const selectedRegionIds = regionState.map((region) => region.id);
-    setSelectedRegions(selectedRegionIds);
-  }, [regionState]);
+    const queryRegions = searchParams.get('regions')?.split(',') ?? [];
+    const regionIds = queryRegions.map(Number);
+    setSelectedRegions(regionIds);
+    if (regionIds.length) {
+      const filteredRegions = regions?.filter((region) =>
+        regionIds.includes(region.id),
+      );
+      dispatch(setRegions(filteredRegions ?? []));
+    }
+  }, [regions, searchParams, dispatch]);
+
+  const handleRegionSelectFilter = () => {
+    const regionIds = selectedRegions.join(',');
+
+    const currentParams = new URLSearchParams(searchParams.toString());
+
+    if (regionIds) {
+      currentParams.set('regions', regionIds);
+    } else {
+      currentParams.delete('regions');
+    }
+    setSearchParams({ regions: regionIds });
+
+    const payload = regions?.filter((region) =>
+      selectedRegions.includes(region.id),
+    );
+
+    if (payload) {
+      dispatch(setRegions(payload));
+    }
+
+    setIsOpen(false);
+  };
 
   const isCheckboxChecked = (id: number) => selectedRegions.includes(id);
 
@@ -45,17 +72,6 @@ export const RegionFilter = () => {
         ? prevSelected.filter((region) => region !== id)
         : [...prevSelected, id],
     );
-  };
-
-  const handleRegionSelectFilter = () => {
-    const payload = regions?.filter((region) =>
-      selectedRegions.includes(region.id),
-    );
-
-    if (payload) {
-      dispatch(setRegions(payload));
-    }
-    setIsOpen(false);
   };
 
   return (
@@ -117,7 +133,6 @@ export const RegionFilter = () => {
           </div>
         ) : null}
 
-        {/* Apply Button */}
         <div className="mt-8 w-full">
           <Button
             className="ml-auto block"
@@ -132,5 +147,3 @@ export const RegionFilter = () => {
     </DropdownMenu>
   );
 };
-
-RegionFilter.displayName = 'RegionFilter';

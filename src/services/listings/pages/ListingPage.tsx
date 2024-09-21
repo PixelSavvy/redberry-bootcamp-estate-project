@@ -21,6 +21,7 @@ import { useGetListingQuery } from '@/services/listings';
 import { convertToDate } from '@/utils';
 
 import { ListingDeleteModal } from './ListingDeleteModal';
+import { ListingCarousel } from '../components/listing/ListingCarousel';
 
 export const ListingPage = () => {
   const { id } = useParams();
@@ -35,7 +36,7 @@ export const ListingPage = () => {
   if (!listing) return null;
 
   return (
-    <section className="w-full">
+    <section className="mb-[14.25rem] w-full">
       <div className="relative grid grid-cols-2 gap-16">
         {/* image */}
         <figure className="relative mr-auto w-full">
@@ -134,15 +135,22 @@ export const ListingPage = () => {
                 ლისტინგის წაშლა
               </Button>
             </div>
-
+            {/* Listng Delete Modal */}
             <div>
               <ListingDeleteModal
-                id={listing.id ?? ''}
+                id={listing.id}
                 isDialogOpen={isDialogOpen}
                 setIsDialogOpen={setIsDialogOpen}
               />
             </div>
           </Card>
+        </div>
+      </div>
+
+      <div className="mt-14">
+        <h2 className="text-32 font-medium">ბინები მსგავს ლოკაციაზე</h2>
+        <div className="mt-14">
+          <ListingCarousel />
         </div>
       </div>
     </section>

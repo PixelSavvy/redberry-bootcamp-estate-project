@@ -1,3 +1,5 @@
+import { useSearchParams } from 'react-router-dom';
+
 import { Button, CrossIcon } from '@/components';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import {
@@ -11,8 +13,14 @@ import {
 
 export const FilterTags = () => {
   const { regions, price, area, numberOfRooms } = useAppSelector(selectFilter);
-
   const dispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const removeQueryParam = (param: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.delete(param);
+    setSearchParams(newSearchParams);
+  };
 
   return (
     <ul className="flex flex-wrap items-center justify-start gap-2">
@@ -25,6 +33,15 @@ export const FilterTags = () => {
             variant="ghost"
             onClick={() => {
               dispatch(removeRegion(region.id));
+
+              const updatedRegions = regions.filter((r) => r.id !== region.id);
+              if (updatedRegions.length > 0) {
+                setSearchParams({
+                  regions: updatedRegions.map((r) => r.id).join(','),
+                });
+              } else {
+                removeQueryParam('regions');
+              }
             }}
           >
             <span>{region.name}</span>
@@ -34,7 +51,7 @@ export const FilterTags = () => {
         </li>
       ))}
       {/* price */}
-      {price?.min && price.max ? (
+      {price.min && price.max ? (
         <li className="flex items-center space-x-1">
           <Button
             className="rounded-full border px-2.5 py-2 text-[0.875rem] font-normal text-foreground/80"
@@ -42,6 +59,8 @@ export const FilterTags = () => {
             variant="ghost"
             onClick={() => {
               dispatch(removePrice());
+              if (searchParams.has('minPrice')) removeQueryParam('minPrice');
+              if (searchParams.has('maxPrice')) removeQueryParam('maxPrice');
             }}
           >
             <span>{`${price.min.toString()} ₾ - ${price.max.toString()} ₾`}</span>
@@ -59,6 +78,8 @@ export const FilterTags = () => {
             variant="ghost"
             onClick={() => {
               dispatch(removeArea());
+              if (searchParams.has('minArea')) removeQueryParam('minArea');
+              if (searchParams.has('maxArea')) removeQueryParam('maxArea');
             }}
           >
             <span>
@@ -78,6 +99,7 @@ export const FilterTags = () => {
             variant="ghost"
             onClick={() => {
               dispatch(removeNumberOfRooms());
+              if (searchParams.has('rooms')) removeQueryParam('rooms');
             }}
           >
             <span>{numberOfRooms}</span>
@@ -86,8 +108,12 @@ export const FilterTags = () => {
           </Button>
         </li>
       ) : null}
+
+      {/* Reset filter */}
       {regions.length > 0 ||
-      (price?.min ?? price?.max ?? area.min) ||
+      price.min ||
+      price.max ||
+      area.min ||
       area.max ||
       numberOfRooms ? (
         <li className="ml-4">
@@ -95,7 +121,10 @@ export const FilterTags = () => {
             className="p-0 text-[0.875rem] hover:bg-transparent hover:text-foreground/60"
             type="button"
             variant="ghost"
-            onClick={() => dispatch(resetFilter())}
+            onClick={() => {
+              dispatch(resetFilter());
+              setSearchParams({});
+            }}
           >
             გასუფთავება
           </Button>

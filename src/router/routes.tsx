@@ -7,7 +7,15 @@ export const router = createBrowserRouter([
   {
     path: mapped.root.path,
     element: (
-      <Suspense fallback={<h1 className="text-red-500">Loading...</h1>}>
+      <Suspense
+        fallback={
+          <div className="fixed flex min-h-full w-full place-content-center bg-background">
+            <h1 className="my-auto text-24 font-medium text-primary">
+              იტვირთება
+            </h1>
+          </div>
+        }
+      >
         <mapped.root.element />
       </Suspense>
     ),

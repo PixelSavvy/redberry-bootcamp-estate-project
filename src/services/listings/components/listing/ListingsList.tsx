@@ -28,7 +28,6 @@ export const ListingsList: FC<TListingsListProps> = ({
 
   useEffect(() => {
     if (!data) return;
-
     const filteredData = filterListings(data, filterState);
     setFilteredListings(filteredData);
   }, [data, filterState]);
@@ -39,6 +38,11 @@ export const ListingsList: FC<TListingsListProps> = ({
       <p className="text-20 text-foreground/80">
         აღნიშნული მონაცემებით განცხადება არ იძებნება
       </p>
+    );
+
+  if (!data)
+    return (
+      <p className="text-20 text-foreground/80">მონაცემები ვერ ჩაიტვირთა</p>
     );
 
   return (

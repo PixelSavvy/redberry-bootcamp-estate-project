@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import {
   Button,
@@ -19,6 +20,7 @@ import { FilterVariants } from './FilterVariants';
 export const AreaFilter = () => {
   const dispatch = useAppDispatch();
   const areaState = useAppSelector(selectArea);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const variants = [50, 100, 150, 200, 300];
 
@@ -28,18 +30,25 @@ export const AreaFilter = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (areaState.min !== 0) {
+    const queryMinArea = searchParams.get('minArea');
+    const queryMaxArea = searchParams.get('maxArea');
+
+    if (queryMinArea) {
+      setMinArea(queryMinArea);
+    } else if (areaState.min !== 0) {
       setMinArea(areaState.min.toString());
     } else {
       setMinArea('');
     }
 
-    if (areaState.max !== 0) {
+    if (queryMaxArea) {
+      setMaxArea(queryMaxArea);
+    } else if (areaState.max !== 0) {
       setMaxArea(areaState.max.toString());
     } else {
       setMaxArea('');
     }
-  }, [areaState]);
+  }, [areaState, searchParams]);
 
   const handleMinAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -70,7 +79,6 @@ export const AreaFilter = () => {
       setErrorMessage('');
     }
   };
-
   const handleAreaSelect = () => {
     if (errorMessage) return;
 
@@ -81,6 +89,21 @@ export const AreaFilter = () => {
       }),
     );
 
+    const currentParams = new URLSearchParams(searchParams.toString());
+
+    if (minArea) {
+      currentParams.set('minArea', minArea);
+    } else {
+      currentParams.delete('minArea');
+    }
+
+    if (maxArea) {
+      currentParams.set('maxArea', maxArea);
+    } else {
+      currentParams.delete('maxArea');
+    }
+
+    setSearchParams(currentParams);
     setIsOpen(false);
   };
 
