@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   Button,
@@ -9,15 +9,26 @@ import {
   DropdownMenuTrigger,
   Input,
 } from '@/components/ui';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 import { cn } from '@/lib';
-import { setNumberOfRooms } from '@/services/filter';
+import { selectNumberOfRooms, setNumberOfRooms } from '@/services/filter'; // Импортируем selectNumberOfRooms
 
 export const RoomsFilter = () => {
   const dispatch = useAppDispatch();
+
+  const roomsState = useAppSelector(selectNumberOfRooms);
+
   const [rooms, setRooms] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (roomsState !== 0) {
+      setRooms(roomsState.toString());
+    } else {
+      setRooms('');
+    }
+  }, [roomsState]);
 
   const handleRoomsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -55,7 +66,7 @@ export const RoomsFilter = () => {
 
       <DropdownMenuContent
         align="start"
-        className="rounded-10 border p-6 shadow-filter-content"
+        className="w-[17.75rem] rounded-10 border bg-background p-6 shadow-filter-content"
         side="bottom"
         sideOffset={10}
         onCloseAutoFocus={(e) => {
@@ -68,11 +79,11 @@ export const RoomsFilter = () => {
         <div className="mt-6">
           <Input
             min="0"
-            placeholder="0"
+            placeholder="2"
             type="number"
             value={rooms}
             className={cn(
-              'h-10 w-20 rounded-6',
+              'h-10 w-20 rounded-6 placeholder:text-foreground/40',
               errorMessage && 'border-primary',
             )}
             onChange={handleRoomsChange}
@@ -81,7 +92,7 @@ export const RoomsFilter = () => {
             <p className="mt-2 text-sm text-red-500">{errorMessage}</p>
           ) : null}
         </div>
-        {/* Apply Button */}
+
         <div className="mt-8 w-full">
           <Button
             className="ml-auto block"

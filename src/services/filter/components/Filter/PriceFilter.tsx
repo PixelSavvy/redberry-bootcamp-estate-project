@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   Button,
@@ -10,9 +10,9 @@ import {
   DropdownMenuTrigger,
   Input,
 } from '@/components/ui';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 import { cn } from '@/lib';
-import { setPrice } from '@/services/filter';
+import { selectPrice, setPrice } from '@/services/filter';
 
 import { FilterVariants } from './FilterVariants';
 
@@ -25,6 +25,22 @@ export const PriceFilter = () => {
   const [maxPrice, setMaxPrice] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const priceState = useAppSelector(selectPrice);
+
+  useEffect(() => {
+    if (priceState.min !== 0) {
+      setMinPrice(priceState.min.toString());
+    } else {
+      setMinPrice('');
+    }
+
+    if (priceState.max !== 0) {
+      setMaxPrice(priceState.max.toString());
+    } else {
+      setMaxPrice('');
+    }
+  }, [priceState]);
 
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -97,10 +113,13 @@ export const PriceFilter = () => {
               &#8382;
             </span>
             <Input
-              className={cn(errorMessage.length > 0 ? 'border-primary' : '')}
               placeholder="დან"
               type="number"
               value={minPrice !== '' ? minPrice : ''}
+              className={cn(
+                errorMessage.length > 0 ? 'border-primary' : '',
+                'placeholder:text-foreground/40',
+              )}
               onChange={handleMinPriceChange}
             />
           </div>
@@ -109,10 +128,13 @@ export const PriceFilter = () => {
               &#8382;
             </span>
             <Input
-              className={cn(errorMessage.length > 0 ? 'border-primary' : '')}
               placeholder="მდე"
               type="number"
               value={maxPrice !== '' ? maxPrice : ''}
+              className={cn(
+                errorMessage.length > 0 ? 'border-primary' : '',
+                'placeholder:text-foreground/40',
+              )}
               onChange={handleMaxPriceChange}
             />
           </div>

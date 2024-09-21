@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   Button,
@@ -10,14 +10,15 @@ import {
   DropdownMenuTrigger,
   Input,
 } from '@/components/ui';
-import { useAppDispatch } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks';
 import { cn } from '@/lib';
-import { setArea } from '@/services/filter';
+import { selectArea, setArea } from '@/services/filter';
 
 import { FilterVariants } from './FilterVariants';
 
 export const AreaFilter = () => {
   const dispatch = useAppDispatch();
+  const areaState = useAppSelector(selectArea);
 
   const variants = [50, 100, 150, 200, 300];
 
@@ -25,6 +26,20 @@ export const AreaFilter = () => {
   const [maxArea, setMaxArea] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (areaState.min !== 0) {
+      setMinArea(areaState.min.toString());
+    } else {
+      setMinArea('');
+    }
+
+    if (areaState.max !== 0) {
+      setMaxArea(areaState.max.toString());
+    } else {
+      setMaxArea('');
+    }
+  }, [areaState]);
 
   const handleMinAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -97,10 +112,13 @@ export const AreaFilter = () => {
               მ<sup>2</sup>
             </span>
             <Input
-              className={cn(errorMessage.length > 0 ? 'border-primary' : '')}
               placeholder="დან"
               type="number"
               value={minArea !== '' ? minArea : ''}
+              className={cn(
+                errorMessage.length > 0 ? 'border-primary' : '',
+                'placeholder:text-foreground/40',
+              )}
               onChange={handleMinAreaChange}
             />
           </div>
@@ -109,10 +127,13 @@ export const AreaFilter = () => {
               მ<sup>2</sup>
             </span>
             <Input
-              className={cn(errorMessage.length > 0 ? 'border-primary' : '')}
               placeholder="მდე"
               type="number"
               value={maxArea !== '' ? maxArea : ''}
+              className={cn(
+                errorMessage.length > 0 ? 'border-primary' : '',
+                'placeholder:text-foreground/40',
+              )}
               onChange={handleMaxAreaChange}
             />
           </div>

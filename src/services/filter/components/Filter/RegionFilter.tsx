@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   Button,
@@ -11,13 +11,19 @@ import {
   DropdownMenuTrigger,
   Skeleton,
 } from '@/components/ui';
-import { useAppDispatch } from '@/hooks';
-import { setRegions, useGetRegionsQuery } from '@/services/filter';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import {
+  selectRegions,
+  setRegions,
+  useGetRegionsQuery,
+} from '@/services/filter';
 
 export const RegionFilter = () => {
   const [selectedRegions, setSelectedRegions] = useState<number[]>([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+
+  const regionState = useAppSelector(selectRegions);
 
   const {
     data: regions,
@@ -25,6 +31,11 @@ export const RegionFilter = () => {
     isLoading,
     isSuccess,
   } = useGetRegionsQuery(null);
+
+  useEffect(() => {
+    const selectedRegionIds = regionState.map((region) => region.id);
+    setSelectedRegions(selectedRegionIds);
+  }, [regionState]);
 
   const isCheckboxChecked = (id: number) => selectedRegions.includes(id);
 
