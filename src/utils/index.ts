@@ -12,3 +12,14 @@ export const convertToDate = (date: string): string => {
     day: 'numeric',
   }).format(parsedDate);
 };
+
+export const convertFileToDataURL = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve(reader.result as string);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};

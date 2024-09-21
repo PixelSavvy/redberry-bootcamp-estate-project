@@ -1,5 +1,3 @@
-/* eslint-disable import/no-cycle */
-
 import {
   Button,
   Dialog,

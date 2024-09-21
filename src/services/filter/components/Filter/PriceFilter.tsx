@@ -12,7 +12,7 @@ import {
 } from '@/components/ui';
 import { useAppDispatch } from '@/hooks';
 import { cn } from '@/lib';
-import { setFilter } from '@/services/filter';
+import { setPrice } from '@/services/filter';
 
 import { FilterVariants } from './FilterVariants';
 
@@ -60,11 +60,9 @@ export const PriceFilter = () => {
     if (errorMessage) return;
 
     dispatch(
-      setFilter({
-        price: {
-          min: minPrice ? Number(minPrice) : 0,
-          max: maxPrice ? Number(maxPrice) : 0,
-        },
+      setPrice({
+        min: Number(minPrice),
+        max: Number(maxPrice),
       }),
     );
 

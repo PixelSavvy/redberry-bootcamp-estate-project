@@ -14,12 +14,10 @@ const citiesSchema = z.array(
   }),
 );
 
-const priceSchema = z
-  .object({
-    min: z.number(),
-    max: z.number(),
-  })
-  .nullable();
+const priceSchema = z.object({
+  min: z.number(),
+  max: z.number(),
+});
 
 const areaSchema = z.object({
   min: z.number(),
@@ -37,7 +35,10 @@ const filterSchema = z.object({
 
 const filterDefaultValues = {
   regions: [],
-  price: null,
+  price: {
+    min: 0,
+    max: 0,
+  },
   area: { min: 0, max: 0 },
   numberOfRooms: 0,
 };

@@ -12,7 +12,7 @@ const VALID_IMAGE_MIME_TYPES = [
 const MAX_FILE_SIZE = 1 * 1024 * 1024;
 
 const listingSchema = z.object({
-  id: z.string().optional(),
+  id: z.number().optional(),
   address: z.string({ message: 'სავალდებულოა' }).min(2, {
     message: 'მინიმუმ ორი სიმბოლო',
   }),
@@ -21,13 +21,13 @@ const listingSchema = z.object({
   }),
   city: z
     .object({
-      id: z.string(),
+      id: z.number(),
       name: z.string(),
       region: z.object({
-        id: z.string(),
+        id: z.number(),
         name: z.string(),
       }),
-      region_id: z.string(),
+      region_id: z.number(),
     })
     .optional(),
   city_id: z.string().refine((val) => val, {

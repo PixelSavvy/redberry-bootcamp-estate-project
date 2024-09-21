@@ -12,7 +12,7 @@ import {
 } from '@/components/ui';
 import { useAppDispatch } from '@/hooks';
 import { cn } from '@/lib';
-import { setFilter } from '@/services/filter';
+import { setArea } from '@/services/filter';
 
 import { FilterVariants } from './FilterVariants';
 
@@ -60,11 +60,9 @@ export const AreaFilter = () => {
     if (errorMessage) return;
 
     dispatch(
-      setFilter({
-        area: {
-          min: Number(minArea),
-          max: Number(maxArea),
-        },
+      setArea({
+        min: Number(minArea),
+        max: Number(maxArea),
       }),
     );
 

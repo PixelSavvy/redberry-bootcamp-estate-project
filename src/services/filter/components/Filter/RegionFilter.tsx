@@ -12,7 +12,7 @@ import {
   Skeleton,
 } from '@/components/ui';
 import { useAppDispatch } from '@/hooks';
-import { setFilter, useGetRegionsQuery } from '@/services/filter';
+import { setRegions, useGetRegionsQuery } from '@/services/filter';
 
 export const RegionFilter = () => {
   const [selectedRegions, setSelectedRegions] = useState<number[]>([]);
@@ -26,20 +26,6 @@ export const RegionFilter = () => {
     isSuccess,
   } = useGetRegionsQuery(null);
 
-  const handleRegionSelectFilter = () => {
-    if (!regions) return;
-    const payload = regions.filter((region) =>
-      selectedRegions.includes(region.id),
-    );
-    dispatch(
-      setFilter({
-        regions: payload,
-      }),
-    );
-
-    setIsOpen(false);
-  };
-
   const isCheckboxChecked = (id: number) => selectedRegions.includes(id);
 
   const handleRegionSelect = (id: number) => {
@@ -48,6 +34,17 @@ export const RegionFilter = () => {
         ? prevSelected.filter((region) => region !== id)
         : [...prevSelected, id],
     );
+  };
+
+  const handleRegionSelectFilter = () => {
+    const payload = regions?.filter((region) =>
+      selectedRegions.includes(region.id),
+    );
+
+    if (payload) {
+      dispatch(setRegions(payload));
+    }
+    setIsOpen(false);
   };
 
   return (

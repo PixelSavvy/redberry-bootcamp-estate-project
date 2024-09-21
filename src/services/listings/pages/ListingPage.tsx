@@ -44,9 +44,9 @@ export const ListingPage = () => {
             className="aspect-square h-full w-full rounded-t-14 object-cover"
             src={typeof listing.image === 'string' ? listing.image : ''}
           />
-          <span className="text-20 absolute left-10 top-10 rounded-20 bg-foreground/50 px-6 py-2 font-medium tracking-4 text-background">
+          <figcaption className="text-20 absolute left-10 top-10 rounded-20 bg-foreground/50 px-6 py-2 font-medium tracking-4 text-background">
             {isRentalStatus}
-          </span>
+          </figcaption>
           <figcaption className="float-end mt-3 font-normal text-input">
             <span className="mr-1">გამოქვეყნების თარიღი:</span>
 

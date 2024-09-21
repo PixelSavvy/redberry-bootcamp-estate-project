@@ -23,17 +23,17 @@ export const ListingsListItem: FC<TListingsListItemProps> = ({ listing }) => {
   const isRentalStatus = listing.is_rental === '0' ? 'იყიდება' : 'ქირავდება';
 
   return (
-    <Card className="relative cursor-pointer rounded-14 p-0">
-      <span className="absolute left-6 top-6 rounded-16 bg-foreground/50 px-2.5 py-1.5 text-12 font-medium tracking-4 text-background">
-        {isRentalStatus}
-      </span>
+    <Card className="cursor-pointer rounded-14 p-0">
       <CardHeader className="p-0">
-        <div>
+        <figure className="relative">
           <img
             alt={listing.address}
             src={typeof listing.image === 'string' ? listing.image : ''}
           />
-        </div>
+          <figcaption className="absolute left-6 top-6 rounded-16 bg-foreground/50 px-2.5 py-1.5 text-12 font-medium tracking-4 text-background">
+            {isRentalStatus}
+          </figcaption>
+        </figure>
         <div className="p-6">
           <CardTitle className="mb-1.5 text-28 font-bold">
             {formatNumber(Number(listing.price))} &#8382;

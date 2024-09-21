@@ -11,7 +11,7 @@ import {
 } from '@/components/ui';
 import { useAppDispatch } from '@/hooks';
 import { cn } from '@/lib';
-import { setFilter } from '@/services/filter';
+import { setNumberOfRooms } from '@/services/filter';
 
 export const RoomsFilter = () => {
   const dispatch = useAppDispatch();
@@ -40,11 +40,7 @@ export const RoomsFilter = () => {
       return;
     }
 
-    dispatch(
-      setFilter({
-        numberOfRooms: numRooms,
-      }),
-    );
+    dispatch(setNumberOfRooms(numRooms));
     setIsOpen(false);
   };
 

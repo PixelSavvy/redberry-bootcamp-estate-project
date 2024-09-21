@@ -1,11 +1,10 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import { type TFilter } from '@/services/filter/schemas/filterSchema';
 import { type TRootState } from '@/store';
 
-type TFilterProps = TFilter;
+import { type TFilter } from '../schemas/filterSchema';
 
-const initialState: TFilterProps = {
+const initialState: TFilter = {
   regions: [],
   price: {
     min: 0,
@@ -22,27 +21,23 @@ const filterSlice = createSlice({
   name: 'filter',
   initialState,
   reducers: {
-    setRegions(state, action: PayloadAction<TFilterProps['regions']>) {
-      state.regions = action.payload;
+    setRegions(state, action: PayloadAction<TFilter['regions']>) {
+      state.regions = [...action.payload];
     },
-    setPrice(state, action: PayloadAction<TFilterProps['price']>) {
-      state.price = action.payload;
-    },
-    setArea(state, action: PayloadAction<TFilterProps['area']>) {
-      state.area = action.payload;
-    },
-    setNumberOfRooms(
-      state,
-      action: PayloadAction<TFilterProps['numberOfRooms']>,
-    ) {
-      state.numberOfRooms = action.payload;
-    },
-
-    setFilter: (state, action: PayloadAction<Partial<TFilterProps>>) => {
-      return {
-        ...state,
-        ...action.payload,
+    setPrice(state, action: PayloadAction<TFilter['price']>) {
+      state.price = {
+        min: action.payload.min,
+        max: action.payload.max,
       };
+    },
+    setArea(state, action: PayloadAction<TFilter['area']>) {
+      state.area = {
+        min: action.payload.min,
+        max: action.payload.max,
+      };
+    },
+    setNumberOfRooms(state, action: PayloadAction<TFilter['numberOfRooms']>) {
+      state.numberOfRooms = action.payload;
     },
 
     removeRegion(state, action: PayloadAction<number>) {
@@ -63,8 +58,11 @@ const filterSlice = createSlice({
       state.numberOfRooms = initialState.numberOfRooms;
     },
 
-    resetFilter() {
-      return initialState;
+    resetFilter(state) {
+      state.regions = initialState.regions;
+      state.price = initialState.price;
+      state.area = initialState.area;
+      state.numberOfRooms = initialState.numberOfRooms;
     },
   },
 });
@@ -79,10 +77,15 @@ const {
   removeArea,
   removeNumberOfRooms,
   resetFilter,
-  setFilter,
 } = filterSlice.actions;
 
-const selectFilter = (state: TRootState): TFilterProps => state.filter;
+const selectFilter = (state: TRootState): TFilter => state.filter;
+const selectRegions = (state: TRootState): TFilter['regions'] =>
+  state.filter.regions;
+const selectPrice = (state: TRootState): TFilter['price'] => state.filter.price;
+const selectArea = (state: TRootState): TFilter['area'] => state.filter.area;
+const selectNumberOfRooms = (state: TRootState): TFilter['numberOfRooms'] =>
+  state.filter.numberOfRooms;
 
 const filterReducer = filterSlice.reducer;
 
@@ -93,9 +96,12 @@ export {
   removePrice,
   removeRegion,
   resetFilter,
+  selectArea,
   selectFilter,
+  selectNumberOfRooms,
+  selectPrice,
+  selectRegions,
   setArea,
-  setFilter,
   setNumberOfRooms,
   setPrice,
   setRegions,
