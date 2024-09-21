@@ -57,6 +57,8 @@ module.exports = {
         reservedFirst: true,
       },
     ],
+    // turn off cycle dependacy check
+    'import/no-cycle': 'off',
     // sort import statements
     'import/order': [
       'warn',

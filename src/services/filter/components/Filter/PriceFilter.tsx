@@ -1,58 +1,78 @@
+import { useState } from 'react';
+
 import {
   Button,
   ChevronDown,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuTrigger,
   Input,
 } from '@/components/ui';
-import { useNumberFormatter } from '@/hooks';
+import { useAppDispatch } from '@/hooks';
+import { cn } from '@/lib';
+import { setFilter } from '@/services/filter';
+
+import { FilterVariants } from './FilterVariants';
 
 export const PriceFilter = () => {
-  const { formatNumber } = useNumberFormatter();
+  const dispatch = useAppDispatch();
 
-  // const [minPrice, setMinPrice] = useState<number | string>('');
-  // const [formattedMinPrice, setFormattedMinPrice] = useState<string>('');
+  const variants = [50000, 100000, 150000, 200000, 300000];
 
-  // const [maxPrice, setMaxPrice] = useState<number | string>('');
-  // const [formattedMaxPrice, setFormattedMaxPrice] = useState<string>('');
+  const [minPrice, setMinPrice] = useState<string>('');
+  const [maxPrice, setMaxPrice] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  // const dispatch = useAppDispatch();
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setMinPrice(value);
+    validatePrices(value, maxPrice);
+  };
 
-  // const handleMinPriceClick = (value: number) => {
-  //   setMinPrice(value);
-  //   setFormattedMinPrice(formatNumber(value));
-  // };
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setMaxPrice(value);
+    validatePrices(minPrice, value);
+  };
 
-  // const handleMaxPriceClick = (value: number) => {
-  //   setMaxPrice(value);
-  //   setFormattedMaxPrice(formatNumber(value));
-  // };
+  const handleMinPriceClick = (price: string) => {
+    setMinPrice(price);
+    validatePrices(price, maxPrice);
+  };
 
-  // const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value.replace(/[^\d]/g, '');
-  //   setMinPrice(value ? parseInt(value, 10) : '');
-  //   setFormattedMinPrice(value ? formatNumber(parseInt(value, 10)) : '');
-  // };
+  const handleMaxPriceClick = (price: string) => {
+    setMaxPrice(price);
+    validatePrices(minPrice, price);
+  };
 
-  // const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value.replace(/[^\d]/g, '');
-  //   setMaxPrice(value ? parseInt(value, 10) : '');
-  //   setFormattedMaxPrice(value ? formatNumber(parseInt(value, 10)) : '');
-  // };
+  const validatePrices = (min: string, max: string) => {
+    if (Number(min) && Number(max) && Number(min) > Number(max)) {
+      setErrorMessage('ჩაწერეთ ვალიდური მონაცემები');
+    } else {
+      setErrorMessage('');
+    }
+  };
 
-  // const handlePriceSelectFilter = () => {
-  //   dispatch(
-  //     setFilter({
-  //       min: Number(minPrice),
-  //       max: Number(maxPrice),
-  //     }),
-  //   );
-  // };
+  const handlePriceSelect = () => {
+    if (errorMessage) return;
+
+    dispatch(
+      setFilter({
+        price: {
+          min: minPrice ? Number(minPrice) : 0,
+          max: maxPrice ? Number(maxPrice) : 0,
+        },
+      }),
+    );
+
+    setIsOpen(false);
+  };
 
   return (
-    <DropdownMenu modal>
+    <DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild className="group">
         <Button variant="ghost">
           <span>საფასო კატეგორია</span>
@@ -62,7 +82,7 @@ export const PriceFilter = () => {
 
       <DropdownMenuContent
         align="start"
-        className="rounded-10 border p-6 shadow-filter-content"
+        className="rounded-10 border bg-background p-6 shadow-filter-content"
         side="bottom"
         sideOffset={10}
         onCloseAutoFocus={(e) => {
@@ -72,17 +92,18 @@ export const PriceFilter = () => {
         <DropdownMenuLabel className="p-0 font-medium leading-1.2">
           ფასის მიხედვით
         </DropdownMenuLabel>
-        <div className="mt-6 grid grid-cols-2 gap-4">
-          <div className="relative">
+
+        <DropdownMenuGroup className="mt-6 grid grid-cols-2 gap-4">
+          <div className="relative hover:bg-transparent">
             <span className="absolute right-2.5 top-1/2 -translate-y-1/2 transform text-[#2D3648]">
               &#8382;
             </span>
             <Input
-              className=""
+              className={cn(errorMessage.length > 0 ? 'border-primary' : '')}
               placeholder="დან"
-              type="text"
-              // value={formattedMinPrice}
-              // onChange={handleMinPriceChange}
+              type="number"
+              value={minPrice !== '' ? minPrice : ''}
+              onChange={handleMinPriceChange}
             />
           </div>
           <div className="relative">
@@ -90,57 +111,40 @@ export const PriceFilter = () => {
               &#8382;
             </span>
             <Input
-              className=""
+              className={cn(errorMessage.length > 0 ? 'border-primary' : '')}
               placeholder="მდე"
-              type="text"
-              // value={formattedMaxPrice}
-              // onChange={handleMaxPriceChange}
+              type="number"
+              value={maxPrice !== '' ? maxPrice : ''}
+              onChange={handleMaxPriceChange}
             />
           </div>
-        </div>
+          {errorMessage ? (
+            <div className="col-span-2 -mt-2">
+              <p className="text-12 text-primary">{errorMessage}</p>
+            </div>
+          ) : null}
+        </DropdownMenuGroup>
 
         <div className="mt-6 grid w-full grid-cols-2 gap-x-6 text-14">
-          <div>
-            <p className="mb-4 font-medium">მინ. ფასი</p>
-            <ul className="flex flex-col items-start justify-start space-y-2">
-              {[50000, 100000, 150000, 200000, 300000].map((price) => (
-                <Button
-                  key={price}
-                  className="h-auto p-0 font-normal transition-colors hover:bg-transparent hover:text-foreground/60"
-                  variant="ghost"
-                  // onClick={() => {
-                  //   handleMinPriceClick(price);
-                  // }}
-                >
-                  {formatNumber(price)} &#8382;
-                </Button>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="mb-4 font-medium">მაქს. ფასი</p>
-            <ul className="flex flex-col items-start justify-start space-y-2">
-              {[50000, 100000, 150000, 200000, 300000].map((price) => (
-                <Button
-                  key={price}
-                  className="h-auto p-0 font-normal transition-colors hover:bg-transparent hover:text-foreground/60"
-                  variant="ghost"
-                  // onClick={() => {
-                  //   handleMaxPriceClick(price);
-                  // }}
-                >
-                  {formatNumber(price)} &#8382;
-                </Button>
-              ))}
-            </ul>
-          </div>
+          <FilterVariants
+            handleClick={handleMinPriceClick}
+            label="მინ. ფასი"
+            sign="₾"
+            variants={variants}
+          />
+          <FilterVariants
+            handleClick={handleMaxPriceClick}
+            label="მაქს. ფასი"
+            sign="₾"
+            variants={variants}
+          />
         </div>
 
         <div className="mt-8 w-full">
           <Button
             className="ml-auto block"
             variant="primary_small"
-            // onClick={handlePriceSelectFilter}
+            onClick={handlePriceSelect}
           >
             არჩევა
           </Button>

@@ -12,9 +12,7 @@ import {
   Skeleton,
 } from '@/components/ui';
 import { useAppDispatch } from '@/hooks';
-import { useGetRegionsQuery } from '@/services/filter/api/filterApiSlice';
-
-import { setFilter } from '../../slices/filterSlice';
+import { setFilter, useGetRegionsQuery } from '@/services/filter';
 
 export const RegionFilter = () => {
   const [selectedRegions, setSelectedRegions] = useState<number[]>([]);
@@ -33,7 +31,11 @@ export const RegionFilter = () => {
     const payload = regions.filter((region) =>
       selectedRegions.includes(region.id),
     );
-    dispatch(setFilter({ regions: payload }));
+    dispatch(
+      setFilter({
+        regions: payload,
+      }),
+    );
 
     setIsOpen(false);
   };
@@ -51,7 +53,7 @@ export const RegionFilter = () => {
   return (
     <DropdownMenu modal open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild className="group">
-        <Button variant="ghost">
+        <Button className="w-full" variant="ghost">
           <span>რეგიონი</span>
           <ChevronDown className="transition-transform group-data-[state=open]:-rotate-180" />
         </Button>
@@ -59,7 +61,7 @@ export const RegionFilter = () => {
 
       <DropdownMenuContent
         align="start"
-        className="rounded-10 border p-6 shadow-filter-content"
+        className="rounded-10 border bg-background p-6 shadow-filter-content"
         side="bottom"
         sideOffset={10}
         onCloseAutoFocus={(e) => {
@@ -93,7 +95,7 @@ export const RegionFilter = () => {
                 checked={isCheckboxChecked(region.id)}
                 className="gap-2 p-0 data-[highlighted]:bg-transparent data-[highlighted]:text-foreground/80"
                 iconClassName="stroke-background"
-                spanClassName="h-[1.25rem] w-[1.25rem] rounded-2 border group-data-[state=checked]:border-success group-data-[state=checked]:bg-success"
+                spanClassName="h-[1.25rem] w-[1.25rem] rounded-2 border group-data-[state=checked]:border-green-500 group-data-[state=checked]:bg-green-500"
                 onCheckedChange={() => {
                   handleRegionSelect(region.id);
                 }}

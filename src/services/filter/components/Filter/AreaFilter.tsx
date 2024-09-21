@@ -1,58 +1,78 @@
+import { useState } from 'react';
+
 import {
   Button,
   ChevronDown,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuLabel,
   DropdownMenuTrigger,
   Input,
 } from '@/components/ui';
-import { useNumberFormatter } from '@/hooks';
+import { useAppDispatch } from '@/hooks';
+import { cn } from '@/lib';
+import { setFilter } from '@/services/filter';
+
+import { FilterVariants } from './FilterVariants';
 
 export const AreaFilter = () => {
-  const { formatNumber } = useNumberFormatter();
+  const dispatch = useAppDispatch();
 
-  // const [minArea, setMinArea] = useState<number | string>('');
-  // const [formattedMinArea, setFormattedMinArea] = useState<string>('');
+  const variants = [50, 100, 150, 200, 300];
 
-  // const [maxArea, setMaxArea] = useState<number | string>('');
-  // const [formattedMaxArea, setFormattedMaxArea] = useState<string>('');
+  const [minArea, setMinArea] = useState<string>('');
+  const [maxArea, setMaxArea] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  // const dispatch = useAppDispatch();
+  const handleMinAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setMinArea(value);
+    validateAreas(value, maxArea);
+  };
 
-  // const handleMinAreaClick = (value: number) => {
-  //   setMinArea(value);
-  //   setFormattedMinArea(formatNumber(value));
-  // };
+  const handleMaxAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setMaxArea(value);
+    validateAreas(minArea, value);
+  };
 
-  // const handleMaxAreaClick = (value: number) => {
-  //   setMaxArea(value);
-  //   setFormattedMaxArea(formatNumber(value));
-  // };
+  const handleMinAreaClick = (area: string) => {
+    setMinArea(area);
+    validateAreas(area, maxArea);
+  };
 
-  // const handleMinAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value.replace(/[^\d]/g, '');
-  //   setMinArea(value ? parseInt(value, 10) : '');
-  //   setFormattedMinArea(value ? formatNumber(parseInt(value, 10)) : '');
-  // };
+  const handleMaxAreaClick = (area: string) => {
+    setMaxArea(area);
+    validateAreas(minArea, area);
+  };
 
-  // const handleMaxAreaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value.replace(/[^\d]/g, '');
-  //   setMaxArea(value ? parseInt(value, 10) : '');
-  //   setFormattedMaxArea(value ? formatNumber(parseInt(value, 10)) : '');
-  // };
+  const validateAreas = (min: string, max: string) => {
+    if (Number(min) && Number(max) && Number(min) > Number(max)) {
+      setErrorMessage('ჩაწერეთ ვალიდური მონაცემები');
+    } else {
+      setErrorMessage('');
+    }
+  };
 
-  // const handlePriceSelectFilter = () => {
-  //   dispatch(
-  //     setFilter({
-  //       min: Number(minArea),
-  //       max: Number(maxArea),
-  //     }),
-  //   );
-  // };
+  const handleAreaSelect = () => {
+    if (errorMessage) return;
+
+    dispatch(
+      setFilter({
+        area: {
+          min: Number(minArea),
+          max: Number(maxArea),
+        },
+      }),
+    );
+
+    setIsOpen(false);
+  };
 
   return (
-    <DropdownMenu modal>
+    <DropdownMenu modal={false} open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild className="group">
         <Button variant="ghost">
           <span>ფართობი</span>
@@ -62,7 +82,7 @@ export const AreaFilter = () => {
 
       <DropdownMenuContent
         align="start"
-        className="rounded-10 border p-6 shadow-filter-content"
+        className="rounded-10 border bg-background p-6 shadow-filter-content"
         side="bottom"
         sideOffset={10}
         onCloseAutoFocus={(e) => {
@@ -72,17 +92,18 @@ export const AreaFilter = () => {
         <DropdownMenuLabel className="p-0 font-medium leading-1.2">
           ფართობის მიხედვით
         </DropdownMenuLabel>
-        <div className="mt-6 grid grid-cols-2 gap-4">
-          <div className="relative">
+
+        <DropdownMenuGroup className="mt-6 grid grid-cols-2 gap-4">
+          <div className="relative hover:bg-transparent">
             <span className="absolute right-2.5 top-1/2 -translate-y-1/2 transform text-[#2D3648]">
               მ<sup>2</sup>
             </span>
             <Input
-              className=""
+              className={cn(errorMessage.length > 0 ? 'border-primary' : '')}
               placeholder="დან"
-              type="text"
-              // value={formattedMinArea}
-              // onChange={handleMinAreaChange}
+              type="number"
+              value={minArea !== '' ? minArea : ''}
+              onChange={handleMinAreaChange}
             />
           </div>
           <div className="relative">
@@ -90,63 +111,40 @@ export const AreaFilter = () => {
               მ<sup>2</sup>
             </span>
             <Input
-              className=""
+              className={cn(errorMessage.length > 0 ? 'border-primary' : '')}
               placeholder="მდე"
-              type="text"
-              // value={formattedMaxArea}
-              // onChange={handleMaxAreaChange}
+              type="number"
+              value={maxArea !== '' ? maxArea : ''}
+              onChange={handleMaxAreaChange}
             />
           </div>
-        </div>
+          {errorMessage ? (
+            <div className="col-span-2">
+              <p className="-mt-2 text-12 text-primary">{errorMessage}</p>
+            </div>
+          ) : null}
+        </DropdownMenuGroup>
 
         <div className="mt-6 grid w-full grid-cols-2 gap-x-6 text-14">
-          <div>
-            <p className="mb-4 font-medium">მინ. ფასი</p>
-            <ul className="flex flex-col items-start justify-start space-y-2">
-              {[50000, 100000, 150000, 200000, 300000].map((price) => (
-                <Button
-                  key={price}
-                  className="h-auto p-0 font-normal transition-colors hover:bg-transparent hover:text-foreground/60"
-                  variant="ghost"
-                  // onClick={() => {
-                  //   handleMinAreaClick(price);
-                  // }}
-                >
-                  {formatNumber(price)}{' '}
-                  <span>
-                    მ<sup>2</sup>
-                  </span>
-                </Button>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="mb-4 font-medium">მაქს. ფასი</p>
-            <ul className="flex flex-col items-start justify-start space-y-2">
-              {[50000, 100000, 150000, 200000, 300000].map((price) => (
-                <Button
-                  key={price}
-                  className="h-auto p-0 font-normal transition-colors hover:bg-transparent hover:text-foreground/60"
-                  variant="ghost"
-                  // onClick={() => {
-                  //   handleMaxAreaClick(price);
-                  // }}
-                >
-                  {formatNumber(price)}
-                  <span>
-                    მ<sup>2</sup>
-                  </span>
-                </Button>
-              ))}
-            </ul>
-          </div>
+          <FilterVariants
+            handleClick={handleMinAreaClick}
+            label="მინ. მ²"
+            sign="მ²"
+            variants={variants}
+          />
+          <FilterVariants
+            handleClick={handleMaxAreaClick}
+            label="მაქს. მ²"
+            sign="მ²"
+            variants={variants}
+          />
         </div>
 
         <div className="mt-8 w-full">
           <Button
             className="ml-auto block"
             variant="primary_small"
-            // onClick={handlePriceSelectFilter}
+            onClick={handleAreaSelect}
           >
             არჩევა
           </Button>

@@ -1,29 +1,33 @@
 import * as z from 'zod';
 
 const regionsSchema = z.array(z.object({ id: z.number(), name: z.string() }));
+
 const citiesSchema = z.array(
   z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string(),
-    region_id: z.number(),
+    region_id: z.string(),
     region: z.object({
-      id: z.number(),
+      id: z.string(),
       name: z.string(),
     }),
   }),
 );
 
-const priceSchema = z.object({
-  min: z.number(),
-  max: z.number(),
-});
+const priceSchema = z
+  .object({
+    min: z.number(),
+    max: z.number(),
+  })
+  .nullable();
+
 const areaSchema = z.object({
   min: z.number(),
   max: z.number(),
 });
-const numberOfRoomsSchema = z.object({
-  n: z.number(),
-});
+
+const numberOfRoomsSchema = z.number();
+
 const filterSchema = z.object({
   regions: regionsSchema,
   price: priceSchema,
@@ -31,7 +35,23 @@ const filterSchema = z.object({
   numberOfRooms: numberOfRoomsSchema,
 });
 
+const filterDefaultValues = {
+  regions: [],
+  price: null,
+  area: { min: 0, max: 0 },
+  numberOfRooms: 0,
+};
+
 type TFilter = z.infer<typeof filterSchema>;
 type TCities = z.infer<typeof citiesSchema>;
 
-export type { TCities, TFilter, citiesSchema, filterSchema };
+export {
+  citiesSchema,
+  filterDefaultValues,
+  filterSchema,
+  numberOfRoomsSchema,
+  priceSchema,
+  regionsSchema,
+  type TCities,
+  type TFilter,
+};

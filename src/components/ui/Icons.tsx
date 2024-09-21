@@ -244,9 +244,10 @@ export const PhoneIcon = () => {
   );
 };
 
-export const CrossIcon = () => {
+export const CrossIcon = ({ className }: { className?: string }) => {
   return (
     <svg
+      className={className}
       fill="none"
       height="24"
       viewBox="0 0 14 15"
