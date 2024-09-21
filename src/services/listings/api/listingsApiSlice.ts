@@ -22,6 +22,16 @@ const listingsApiSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
+
+    deleteListing: builder.mutation({
+      query: (id: string) => ({
+        url: `${import.meta.env.VITE_LISTINGS_URL}/${id}`,
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_AUTH_TOKEN}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -29,4 +39,5 @@ export const {
   useGetListingsQuery,
   useGetListingQuery,
   usePostListingMutation,
+  useDeleteListingMutation,
 } = listingsApiSlice;

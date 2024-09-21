@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ClipLoader } from 'react-spinners';
 
 import {
   Button,
@@ -37,7 +38,7 @@ export const AgentForm = ({
     resolver: zodResolver(agentSchema),
   });
 
-  const [postAgent] = usePostAgentMutation();
+  const [postAgent, { isLoading }] = usePostAgentMutation();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -64,6 +65,7 @@ export const AgentForm = ({
     formData.append('avatar', payload.avatar);
 
     await postAgent(formData);
+
     setIsOpen(false);
   };
 
@@ -204,8 +206,16 @@ export const AgentForm = ({
             <Button variant="secondary">გაუქმება</Button>
           </DialogClose>
 
-          <Button className="m-0" type="submit">
-            დაამატე აგენტი
+          <Button className="m-0 space-x-1" type="submit">
+            <ClipLoader
+              aria-label="Loading Spinner"
+              color="white"
+              data-id="loader"
+              loading={isLoading}
+              size={20}
+              speedMultiplier={0.75}
+            />
+            <span>დაამატე აგენტი</span>
           </Button>
         </DialogFooter>
       </form>

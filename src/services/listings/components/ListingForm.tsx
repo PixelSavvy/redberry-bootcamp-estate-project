@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
 
 import {
   Button,
@@ -26,6 +27,7 @@ import {
   CitySelectInput,
   listingSchema,
   RegionSelectInput,
+  resetListingFormPayload,
   selectListingFormPayload,
   setListingFormPayload,
   type TListing,
@@ -65,7 +67,7 @@ export const ListingForm = () => {
 
   const navigate = useNavigate();
 
-  const [postListing] = usePostListingMutation();
+  const [postListing, { isLoading, isSuccess }] = usePostListingMutation();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -84,13 +86,18 @@ export const ListingForm = () => {
 
   const onSubmit = async (payload: TListing) => {
     const formData = new FormData();
+
     Object.entries(payload).forEach(([key, value]) => {
-      formData.append(key, value);
+      if (key === 'image') {
+        formData.append(key, value as File);
+      } else {
+        formData.append(key, value as string);
+      }
     });
 
     await postListing(formData);
-    // dispatch(resetListingFormPayload());
-    navigate(paths.listings);
+    dispatch(resetListingFormPayload());
+    isSuccess && navigate(paths.listings);
   };
 
   return (
@@ -101,7 +108,7 @@ export const ListingForm = () => {
       >
         {/* IsRental */}
         <div className="grid w-full grid-cols-2 gap-5">
-          <h2 className="col-span-2 font-medium uppercase text-[#1A1A1F]">
+          <h2 className="col-span-2 font-helvetica font-medium uppercase text-[#1A1A1F]">
             {/* Change font family to Helvetica Neue */}
             გარიგების ტიპი
           </h2>
@@ -150,7 +157,7 @@ export const ListingForm = () => {
         </div>
         {/* Location */}
         <div className="grid w-full grid-cols-2 gap-5">
-          <h2 className="col-span-2 font-medium uppercase text-[#1A1A1F]">
+          <h2 className="col-span-2 font-helvetica font-medium uppercase text-[#1A1A1F]">
             {/* Change font family to Helvetica Neue */}
             მდებარეობა
           </h2>
@@ -256,7 +263,7 @@ export const ListingForm = () => {
         </div>
         {/* Flat details */}
         <div className="grid w-full grid-cols-2 gap-5">
-          <h2 className="col-span-2 font-medium uppercase text-[#1A1A1F]">
+          <h2 className="col-span-2 font-helvetica font-medium uppercase text-[#1A1A1F]">
             {/* Change font family to Helvetica Neue */}
             ბინის დეტალები
           </h2>
@@ -405,7 +412,7 @@ export const ListingForm = () => {
         </div>
         {/* Agent */}
         <div className="grid w-full grid-cols-2 space-y-5">
-          <h2 className="col-span-2 font-medium uppercase text-[#1A1A1F]">
+          <h2 className="col-span-2 font-helvetica font-medium uppercase text-[#1A1A1F]">
             {/* Change font family to Helvetica Neue */}
             აგენტი
           </h2>
@@ -436,7 +443,17 @@ export const ListingForm = () => {
           <Button asChild variant="secondary">
             <Link to={paths.listings}>გააუქმე</Link>
           </Button>
-          <Button type="submit">დაამატე ლისტინგი</Button>
+          <Button type="submit">
+            <ClipLoader
+              aria-label="Loading Spinner"
+              color="white"
+              data-id="loader"
+              loading={isLoading}
+              size={20}
+              speedMultiplier={0.75}
+            />
+            <span>დაამატე ლისტინგი</span>
+          </Button>
         </div>
       </form>
     </Form>

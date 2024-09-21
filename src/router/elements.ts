@@ -16,7 +16,7 @@ const AddListingPage = lazy(() =>
 );
 
 const ListingPage = lazy(() =>
-  import('@/services/listings/components/ListingPage').then((module) => ({
+  import('@/services/listings/pages/ListingPage').then((module) => ({
     default: module.ListingPage,
   })),
 );

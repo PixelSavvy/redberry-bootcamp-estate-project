@@ -19,6 +19,7 @@ module.exports = {
       fontWeight: {},
       fontFamily: {
         firago: 'var(--ff-firago)',
+        helvetica: 'var(--ff-helvetica)',
       },
       fontSize: {
         12: '0.75rem',
@@ -32,6 +33,9 @@ module.exports = {
       lineHeight: {
         1.6: '1.6',
         1.2: '1.2',
+      },
+      letterSpacing: {
+        4: '4%',
       },
       colors: {
         background: 'hsl(var(--background))',

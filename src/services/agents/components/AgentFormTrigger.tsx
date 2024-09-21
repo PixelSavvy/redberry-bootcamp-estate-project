@@ -1,4 +1,5 @@
 /* eslint-disable import/no-cycle */
+
 import {
   Button,
   Dialog,
@@ -23,7 +24,7 @@ export const AgentFormTrigger = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogOverlay className="z-50 bg-foreground/30" />
+      <DialogOverlay className="bg-foreground/10 backdrop-blur-[12px]" />
       {!isGhost ? (
         <DialogTrigger asChild>
           <Button variant="secondary">

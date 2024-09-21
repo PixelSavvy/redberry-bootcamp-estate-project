@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
@@ -16,30 +17,40 @@ import {
   SignIcon,
 } from '@/components';
 import { useNumberFormatter } from '@/hooks';
+import { useGetListingQuery } from '@/services/listings';
+import { convertToDate } from '@/utils';
 
-import { useGetListingQuery } from '../api/listingsApiSlice';
+import { ListingDeleteModal } from './ListingDeleteModal';
 
 export const ListingPage = () => {
   const { id } = useParams();
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const { data: listing } = useGetListingQuery(id ?? '');
   const { formatNumber } = useNumberFormatter();
+
+  const isRentalStatus = listing?.is_rental === '0' ? 'იყიდება' : 'ქირავდება';
 
   if (!listing) return null;
 
   return (
     <section className="w-full">
-      <div className="grid grid-cols-2 gap-16">
+      <div className="relative grid grid-cols-2 gap-16">
         {/* image */}
-        <figure className="mr-auto w-full">
+        <figure className="relative mr-auto w-full">
           <img
             alt={listing.address}
             className="aspect-square h-full w-full rounded-t-14 object-cover"
             src={typeof listing.image === 'string' ? listing.image : ''}
           />
+          <span className="text-20 absolute left-10 top-10 rounded-20 bg-foreground/50 px-6 py-2 font-medium tracking-4 text-background">
+            {isRentalStatus}
+          </span>
           <figcaption className="float-end mt-3 font-normal text-input">
             <span className="mr-1">გამოქვეყნების თარიღი:</span>
-            {listing.created_at}
+
+            {convertToDate(listing.created_at ?? '')}
           </figcaption>
         </figure>
         {/* description */}
@@ -114,7 +125,22 @@ export const ListingPage = () => {
             </CardFooter>
 
             <div className="mt-5">
-              <Button variant="outline">ლისტინგის წაშლა</Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsDialogOpen(true);
+                }}
+              >
+                ლისტინგის წაშლა
+              </Button>
+            </div>
+
+            <div>
+              <ListingDeleteModal
+                id={listing.id ?? ''}
+                isDialogOpen={isDialogOpen}
+                setIsDialogOpen={setIsDialogOpen}
+              />
             </div>
           </Card>
         </div>

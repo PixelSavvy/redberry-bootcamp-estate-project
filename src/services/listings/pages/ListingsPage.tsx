@@ -7,7 +7,7 @@ import { paths } from '@/router/paths';
 import { AgentFormTrigger } from '@/services/agents/components/AgentFormTrigger';
 import { Filter } from '@/services/filter';
 
-import { ListingsList } from '../components/ListingsList';
+import { ListingsList } from '../components/listing/ListingsList';
 
 export const ListingsPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
