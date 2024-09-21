@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -6,12 +7,14 @@ import { paths } from '@/router/paths';
 import { AgentFormTrigger } from '@/services/agents/components/AgentFormTrigger';
 import { Filter } from '@/services/filter';
 
+import { ListingsList } from '../components/ListingsList';
+
 export const ListingsPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
-    <section className="mt-76 w-full">
-      <div className="flex items-center justify-between">
+    <div className="mt-76 w-full space-y-8">
+      <section className="flex items-center justify-between">
         <section className="flex items-center justify-between gap-6 rounded-10 border p-[0.375rem]">
           <Filter />
         </section>
@@ -28,7 +31,10 @@ export const ListingsPage = () => {
             setIsOpen={setIsDialogOpen}
           />
         </div>
-      </div>
-    </section>
+      </section>
+      <section>
+        <ListingsList />
+      </section>
+    </div>
   );
 };

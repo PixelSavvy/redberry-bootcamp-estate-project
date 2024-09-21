@@ -12,13 +12,24 @@ const VALID_IMAGE_MIME_TYPES = [
 const MAX_FILE_SIZE = 1 * 1024 * 1024;
 
 const listingSchema = z.object({
+  id: z.string().optional(),
   address: z.string({ message: 'სავალდებულოა' }).min(2, {
     message: 'მინიმუმ ორი სიმბოლო',
   }),
   region_id: z.string().refine((val) => val, {
     message: 'რეგიონი სავალდებულოა',
   }),
-
+  city: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+      region: z.object({
+        id: z.string(),
+        name: z.string(),
+      }),
+      region_id: z.string(),
+    })
+    .optional(),
   city_id: z.string().refine((val) => val, {
     message: 'ქალაქი სავალდებულოა',
   }),
@@ -73,6 +84,17 @@ const listingSchema = z.object({
       message: 'ფაილის ზომა უნდა იყოს 1MB-ზე ნაკლები',
     }),
   is_rental: z.union([z.literal('0'), z.literal('1')]),
+  created_at: z.string().optional(),
+  agent: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+      email: z.string(),
+      phone: z.string(),
+      avatar: z.string(),
+      surname: z.string(),
+    })
+    .optional(),
 });
 
 type TListing = z.infer<typeof listingSchema>;

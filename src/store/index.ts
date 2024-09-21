@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import persistStore from 'redux-persist/es/persistStore';
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
+  blacklist: [apiSlice.reducerPath, 'filter', 'agents'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -27,7 +29,7 @@ const store = configureStore({
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {},
+      serializableCheck: false,
     }).concat(apiSlice.middleware),
 });
 

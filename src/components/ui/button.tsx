@@ -17,7 +17,7 @@ const buttonVariants = cva(
         secondary:
           'h-12 px-4 py-[0.625rem] rounded-10 bg-background text-primary border border-primary hover:bg-primary hover:text-primary-foreground',
         outline:
-          'h-[2.375rem] p-[0.625rem] text-14 rounded-8 border bg-background text-accent hover:bg-accent hover:text-accent-foreground',
+          'h-[2.375rem] p-[0.625rem] text-14 rounded-8 border-[#676E76] border bg-background text-accent hover:bg-accent hover:text-accent-foreground',
         ghost:
           'h-[2.25rem] py-2 px-[0.875rem] rounded-6 bg-background hover:bg-muted',
         icon: 'h-6 w-6 rounded-full bg-background hover:bg-muted',

@@ -15,8 +15,15 @@ const AddListingPage = lazy(() =>
   })),
 );
 
+const ListingPage = lazy(() =>
+  import('@/services/listings/components/ListingPage').then((module) => ({
+    default: module.ListingPage,
+  })),
+);
+
 export const elements = {
   root: RootLayout,
   listings: ListingsPage,
   addListing: AddListingPage,
+  listing: ListingPage,
 };
